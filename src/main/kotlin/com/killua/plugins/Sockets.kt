@@ -27,6 +27,10 @@ fun Application.configureSockets() {
                             close(CloseReason(CloseReason.Codes.NORMAL, "Client said BYE"))
                         }
                     }
+                    is Frame.Binary -> TODO()
+                    is Frame.Close -> TODO()
+                    is Frame.Ping -> TODO()
+                    is Frame.Pong -> TODO()
                 }
             }
         }
