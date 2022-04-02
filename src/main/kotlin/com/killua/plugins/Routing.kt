@@ -1,3 +1,5 @@
+@file:OptIn(KtorExperimentalLocationsAPI::class)
+
 package com.killua.plugins
 
 import io.ktor.routing.*
@@ -8,6 +10,7 @@ import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.request.*
 
+@KtorExperimentalLocationsAPI
 fun Application.configureRouting() {
     install(Locations) {
     }
