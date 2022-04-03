@@ -33,6 +33,7 @@ fun Application.configureSockets() {
                     is Frame.Pong -> TODO()
                 }
             }
+            send("")
         }
     }
 }
