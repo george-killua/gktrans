@@ -6,7 +6,6 @@ build/
 !**/src/test/**/build/
 src/main/resources/application.conf
 keys/
-
 ### STS ###
 .apt_generated
 .classpath
