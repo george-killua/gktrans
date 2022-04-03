@@ -23,11 +23,12 @@ class UserEntity(id: EntityID<UUID>) : CommonEntity(id, UserTable),Principal {
     var userType by UserTable.userType
     var email by UserTable.email
     var password by UserTable.password
-    val carThatDriven by CarEntity backReferencedOn ( CarTable.currentDriver)
-    val carsThatOwned by CarEntity referrersOn UserCarsTable.car
+    val myCurrentCar by CarEntity referrersOn     ( CarTable.currentDriver)
+    val drivenCar by CarEntity referrersOn UserCarsTable.car
     val accidents by AccidentEntity referrersOn UsersAccidentsTable.accident
     val userInfo by UserInfoEntity optionalReferencedOn UserTable.userInfo
     var company by CompanyEntity optionalReferencedOn UserTable.company
+    fun fullName()="${userInfo?.firstname} ${userInfo?.lastname}".ifBlank { id.value.toString() }
 }
 
 
