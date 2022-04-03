@@ -14,7 +14,7 @@ interface UserLocalDataSource {
     suspend fun getUserInfo(uuid: UUID): UserInfoEntity?
     suspend fun getUserLoginCredential(email: String, password: String): UserEntity?
     suspend fun addUser(user: UserDto, currentUser: UserEntity): UserEntity
-    suspend fun addUserInfo(user: UserInfoDto, currentUser: UserEntity): UserInfoEntity
+    suspend fun addUserInfo(userId: UUID, userInfo: UserInfoDto, currentUser: UserEntity): UserInfoEntity?
     suspend fun updateUser(user: UserDto, currentUser: UserEntity): UserEntity?
     suspend fun updateUserEmail(userId: UUID, email: String, currentUser: UserEntity): UserEntity?
     suspend fun updateUserPassword(userId: UUID, password: String, currentUser: UserEntity): UserEntity?

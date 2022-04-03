@@ -2,6 +2,8 @@ package com.killua.extenstions
 
 import com.killua.config.AppConfig
 import com.killua.config.DatabaseConfig
+import com.killua.features.company.data.dao.CompanyEntity
+import com.killua.features.company.data.dao.CompanyTable
 import com.killua.features.image.data.dao.ImagesTable
 import com.killua.features.user.data.dao.UserTable
 import com.killua.features.vehiclemanager.accident.data.dao.AccidentTable
@@ -26,18 +28,18 @@ object DatabaseExt {
     fun initializeConnection(appConfig: AppConfig) {
         val databaseConfig = configInitializer(appConfig.databaseConfig)
         Database.connect(databaseConfig)
+
         transaction {
-            addLogger(StdOutSqlLogger)
-            SchemaUtils.createMissingTablesAndColumns(
+            SchemaUtils.create(
                 tables =
                 arrayOf(
+                    UserTable,
+                    CompanyTable,
                     HolidayTable,
                     WorkDetailTable,
-                    HolidayTable,
                     WorkPlanTable,
                     WorkStaticTable,
                     ImagesTable,
-                    UserTable,
                     CarTable,
                     CarsAccidentsTable,
                     CarInsuranceInfosTable,
@@ -45,7 +47,7 @@ object DatabaseExt {
                     UserCarsTable,
                     UsersAccidentsTable,
                     AccidentTable
-                ), withLogs = true
+                )
             )
 
         }
@@ -60,7 +62,7 @@ object DatabaseExt {
         config.username = databaseConfig.dbUsername
         config.password = databaseConfig.dbPassword
         config.driverClassName = databaseConfig.driver
-        config.isAutoCommit = false
+        config.isAutoCommit = true
         config.maximumPoolSize = 10
         config.transactionIsolation = "TRANSACTION_REPEATABLE_READ"
 

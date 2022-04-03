@@ -10,6 +10,8 @@ import com.killua.features.vehiclemanager.car.data.dao.CarEntity
 import com.killua.features.vehiclemanager.car.data.dao.CarTable
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.sql.jodatime.CurrentDateTime
+import org.jetbrains.exposed.sql.jodatime.datetime
 import org.joda.time.DateTime
 import java.util.*
 
@@ -20,7 +22,7 @@ class UsedHistoryEntity(id: EntityID<UUID>) : CommonEntity(id, UsedHistoryTable)
     var user by UserEntity referencedOn UsedHistoryTable.user
     var car by CarEntity referencedOn UsedHistoryTable.car
     var givingDate by UsedHistoryTable.givingDate
-    val images by ImageEntity optionalReferrersOn ImagesTable.driverHistory
+    val images by ImageEntity optionalReferrersOn ImagesTable.usedHistory
     val returnDate by UsedHistoryTable.returnDate
 
 }
@@ -28,6 +30,6 @@ class UsedHistoryEntity(id: EntityID<UUID>) : CommonEntity(id, UsedHistoryTable)
 object UsedHistoryTable : CommonTable("used_histories") {
     var user = reference("user", UserTable)
     var car = reference("car", CarTable)
-    val givingDate = long("giving_date").default(DateTime.now().millis)
-    val returnDate = long("return_date").nullable().default(null)
+    val givingDate = datetime("giving_date").defaultExpression(CurrentDateTime())
+    val returnDate = datetime("return_date").nullable().default(null)
 }

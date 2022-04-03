@@ -42,20 +42,22 @@ class UserLocalDataSourceImpl() : UserLocalDataSource {
         }
     }
 
-    override suspend fun addUserInfo(user: UserInfoDto, currentUser: UserEntity): UserInfoEntity {
-        return UserInfoEntity.new {
-            this.firstname = user.firstname
-            this.lastname = user.lastname
-            this.phoneNumber = user.phoneNumber
-            this.nationality = user.nationality
-            this.sex = user.sex
-            this.street = user.street
-            this.streetNr = user.streetNr
-            this.city = user.city
-            this.areaCode = user.areaCode
-            this.additionalInfo = user.additionalInfo
+    override suspend fun addUserInfo(userId: UUID, userInfo: UserInfoDto, currentUser: UserEntity): UserInfoEntity? {
+        val tempUserInfo= UserInfoEntity.new {
+            this.firstname = userInfo.firstname
+            this.lastname = userInfo.lastname
+            this.phoneNumber = userInfo.phoneNumber
+            this.nationality = userInfo.nationality
+            this.sex = userInfo.sex
+            this.street = userInfo.street
+            this.streetNr = userInfo.streetNr
+            this.city = userInfo.city
+            this.areaCode = userInfo.areaCode
+            this.additionalInfo = userInfo.additionalInfo
             create(currentUser)
         }
+        getUser(userId)?.userInfo=tempUserInfo
+        return getUser(userId)?.userInfo
     }
 
     override suspend fun updateUser(user: UserDto, currentUser: UserEntity): UserEntity? {
@@ -93,7 +95,7 @@ class UserLocalDataSourceImpl() : UserLocalDataSource {
     }
 
     override suspend fun updateUserInfo(user: UserInfoDto, currentUser: UserEntity): UserInfoEntity? {
-        return UserInfoEntity.findById(user.id.toUuid())?.let {
+        return UserInfoEntity.findById(user.id!!.toUuid())?.let {
             it.firstname = user.firstname
             it.lastname = user.lastname
             it.phoneNumber = user.phoneNumber

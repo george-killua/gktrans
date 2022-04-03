@@ -6,13 +6,13 @@ import com.killua.features.image.data.dao.ImageEntity
 import com.killua.features.image.data.dao.ImagesTable
 import com.killua.features.user.data.dao.UserEntity
 import com.killua.features.user.data.dao.UserTable
-import com.killua.features.vehiclemanager.commondao.CommonEntity
-import com.killua.features.vehiclemanager.commondao.CommonTable
 import com.killua.features.vehiclemanager.accident.data.dao.AccidentEntity
 import com.killua.features.vehiclemanager.car.domain.model.FuelType
 import com.killua.features.vehiclemanager.car.info.dao.CarInsuranceInfosEntity
 import com.killua.features.vehiclemanager.commondao.CarsAccidentsTable
 import com.killua.features.vehiclemanager.commondao.CarsInfosTable
+import com.killua.features.vehiclemanager.commondao.CommonEntity
+import com.killua.features.vehiclemanager.commondao.CommonTable
 import com.killua.features.vehiclemanager.usedhistory.data.dao.UsedHistoryEntity
 import com.killua.features.vehiclemanager.usedhistory.data.dao.UsedHistoryTable
 import org.jetbrains.exposed.dao.UUIDEntityClass
@@ -21,7 +21,7 @@ import org.jetbrains.exposed.sql.jodatime.date
 import org.joda.time.DateTime
 import java.util.*
 
-class CarEntity(id: EntityID<UUID>) : CommonEntity(id,CarTable) {
+class CarEntity(id: EntityID<UUID>) : CommonEntity(id, CarTable) {
     companion object : UUIDEntityClass<CarEntity>(CarTable)
 
     var owner by UserEntity optionalReferencedOn CarTable.owner
@@ -33,7 +33,7 @@ class CarEntity(id: EntityID<UUID>) : CommonEntity(id,CarTable) {
     var fuelType by CarTable.fuelType
     var yearOfManufacture by CarTable.yearOfManufacture
     var carStickerValidUntil by CarTable.carStickerValidUntil
-    var currentDriver by UserEntity referencedOn CarTable.currentDriver
+    var currentDriver by UserEntity optionalReferencedOn CarTable.currentDriver
     val accidents by AccidentEntity referrersOn CarsAccidentsTable.accident
     val usedHistories by UsedHistoryEntity referrersOn UsedHistoryTable.car
     val images by ImageEntity optionalReferrersOn ImagesTable.car
@@ -48,6 +48,6 @@ object CarTable : CommonTable("cars") {
     val yearOfManufacture = varchar("year_of_manufacture", 15).nullable().default(null)
     val carStickerValidUntil = date("car_sticker_valid_until").nullable().default(DateTime.now())
     val vehicleRegistration = CarTable.varchar("vehicle_registration", 15).default("")
-    val currentDriver = reference("actual_driver", UserTable, null, null)
+    val currentDriver = reference("actual_driver", UserTable, null, null).nullable()
 }
 

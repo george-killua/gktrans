@@ -2,19 +2,20 @@
 
 package com.killua.plugins
 
-import io.ktor.routing.*
-import io.ktor.http.*
-import io.ktor.locations.*
-import io.ktor.http.content.*
+import com.killua.features.image.resource.imageEndpoint
 import io.ktor.application.*
+import io.ktor.auth.*
+import io.ktor.http.content.*
+import io.ktor.locations.*
 import io.ktor.response.*
-import io.ktor.request.*
+import io.ktor.routing.*
 
 @KtorExperimentalLocationsAPI
 fun Application.configureRouting() {
     install(Locations) {
     }
 
+    imageEndpoint()
 
     routing {
         get("/") {
@@ -39,6 +40,7 @@ fun Application.configureRouting() {
 
 @Location("/location/{name}")
 class MyLocation(val name: String, val arg1: Int = 42, val arg2: String = "default")
+
 @Location("/type/{name}")
 data class Type(val name: String) {
     @Location("/edit")

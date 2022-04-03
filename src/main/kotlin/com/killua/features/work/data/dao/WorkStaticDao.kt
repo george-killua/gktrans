@@ -3,6 +3,7 @@ package com.killua.features.work.data.dao
 import com.killua.features.vehiclemanager.commondao.CommonEntity
 import com.killua.features.vehiclemanager.commondao.CommonTable
 import com.killua.features.company.data.dao.CompanyEntity
+import com.killua.features.company.data.dao.CompanyTable
 import com.killua.features.user.data.dao.UserEntity
 import com.killua.features.user.data.dao.UserTable
 import org.jetbrains.exposed.dao.UUIDEntityClass
@@ -12,7 +13,7 @@ import java.util.*
 
 object WorkStaticTable : CommonTable("work_statics") {
     val user = reference("user", UserTable)
-    val company = reference("company", HolidayTable)
+    val company = reference("company", CompanyTable)
     val dateOfStatic = date("date_of_static")
     val packagesCount = integer("packages_count")
     val hoursCount = float("hours_count")

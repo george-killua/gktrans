@@ -10,6 +10,7 @@ import org.jetbrains.exposed.sql.jodatime.CurrentDateTime
 import org.jetbrains.exposed.sql.jodatime.datetime
 import org.joda.time.DateTime
 import java.util.*
+
 abstract class CommonTable(name: String) : UUIDTable(name) {
     val createdBy = reference("created_by", UserTable)
     val createdDate = datetime("created_date").defaultExpression(CurrentDateTime())
@@ -18,6 +19,7 @@ abstract class CommonTable(name: String) : UUIDTable(name) {
     val deletedBy = reference("deleted_by", UserTable).nullable()
     val deletedDate = datetime("deleted_date").nullable()
 }
+
 abstract class CommonEntity(id: EntityID<UUID>, commonTable: CommonTable) : UUIDEntity(id) {
     var createdBy by UserEntity referencedOn commonTable.createdBy
     var createdDate by commonTable.createdDate
@@ -32,13 +34,12 @@ abstract class CommonEntity(id: EntityID<UUID>, commonTable: CommonTable) : UUID
     }
 
 
-
     fun cleanSomeOfIt(): Int {
         return deletedDate?.let {
             if (it.minusDays(15).dayOfMonth > 0)
-               delete()
+                delete()
             return@let 1
-        }?:0
+        } ?: 0
     }
 
     fun softDelete(user: UserEntity) {
@@ -72,6 +73,7 @@ abstract class CommonEntity(id: EntityID<UUID>, commonTable: CommonTable) : UUID
     }
 
 }
+
 abstract class CommonEntityClass<E : CommonEntity>(table: CommonTable) : UUIDEntityClass<E>(table) {
 
     init {

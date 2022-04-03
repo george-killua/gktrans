@@ -1,0 +1,947 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0",
+    "title": "transportation_api",
+    "contact": {}
+  },
+  "host": "0.0.0.0:8080",
+  "basePath": "/",
+  "securityDefinitions": {},
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/user/image": {
+      "post": {
+        "summary": "add Image",
+        "tags": [
+          "Images"
+        ],
+        "operationId": "addImage",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
+          },
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/addImageRequest"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "headers": {
+              "Content-Length": {
+                "type": "string",
+                "default": "0"
+              },
+              "Connection": {
+                "type": "string",
+                "default": "keep-alive"
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "edit Image",
+        "tags": [
+          "Images"
+        ],
+        "operationId": "editImage",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
+          },
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/editImageRequest"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "headers": {
+              "Content-Length": {
+                "type": "string",
+                "default": "0"
+              },
+              "Connection": {
+                "type": "string",
+                "default": "keep-alive"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user": {
+      "get": {
+        "summary": "all user",
+        "tags": [
+          "user"
+        ],
+        "operationId": "alluser",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "default": "",
+              "items": {
+                "$ref": "#/definitions/Sampleresponse%3ADetailsaboutauserbyID"
+              }
+            },
+            "examples": {
+              "application/json": [
+                {
+                  "id": "05f7a5d3-b062-4eb8-a619-9a40b6971b7f",
+                  "email": "george@kassig.at",
+                  "password": "george",
+                  "userType": "DRIVER",
+                  "firstname": null,
+                  "lastname": null,
+                  "createdBy": "599be892-4b31-486f-bd8e-d6760ce421f4"
+                }
+              ]
+            },
+            "headers": {
+              "x-next": {
+                "type": "string",
+                "default": "/?nextPage=2"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/Unexpectederror1"
+            },
+            "examples": {
+              "application/json": {
+                "code": 500,
+                "message": "Something went wrong"
+              }
+            },
+            "headers": {}
+          }
+        }
+      },
+      "post": {
+        "summary": "add user",
+        "tags": [
+          "user"
+        ],
+        "operationId": "adduser",
+        "deprecated": false,
+        "produces": [
+          "text/plain; charset=UTF-8"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
+          },
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/adduserrequest"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "type": "string",
+              "default": ""
+            },
+            "examples": {
+              "text/plain; charset=UTF-8": "User(id=069a30a3-a36e-4240-a09a-1afa62442b7b, email=george@kassig.at, password=george, userType=GEORGE, firstname=, lastname=, phoneNr=null, pic=null, createdBy=599be892-4b31)"
+            },
+            "headers": {
+              "Content-Length": {
+                "type": "string",
+                "default": "175"
+              },
+              "Connection": {
+                "type": "string",
+                "default": "keep-alive"
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "update",
+        "tags": [
+          "user"
+        ],
+        "operationId": "update",
+        "deprecated": false,
+        "produces": [
+          "text/plain; charset=UTF-8"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
+          },
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/updaterequest"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "schema": {
+              "$ref": "#/definitions/update"
+            },
+            "examples": {
+              "text/plain; charset=UTF-8": {
+                "id": "069a30a3-a36e-4240-a09a-1afa62442b7b",
+                "email": "george@kassig.at",
+                "password": "george",
+                "userType": "GEORGE",
+                "firstname": "george",
+                "lastname": "kassih",
+                "phoneNr": "43290234908",
+                "createdBy": "599be892-4b31"
+              }
+            },
+            "headers": {
+              "Content-Length": {
+                "type": "string",
+                "default": "205"
+              },
+              "Connection": {
+                "type": "string",
+                "default": "keep-alive"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "delete user",
+        "tags": [
+          "user"
+        ],
+        "operationId": "deleteuser",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Accepted",
+            "headers": {
+              "Content-Length": {
+                "type": "string",
+                "default": "0"
+              },
+              "Connection": {
+                "type": "string",
+                "default": "keep-alive"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "summary": "login",
+        "tags": [
+          "auth"
+        ],
+        "operationId": "login",
+        "deprecated": false,
+        "produces": [
+          "application/json; charset=UTF-8"
+        ],
+        "parameters": [
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/loginrequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/login"
+            },
+            "examples": {
+              "application/json; charset=UTF-8": {
+                "Bearer": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiIsImF1ZCI6Imh0dHBzOi8vdHJhbnNwb3J0aW9uLmhlcm9rdWFwcC5jb20vbG9naW4iLCJ1c2VyX3R5cGUiOiJHRU9SR0UiLCJpc3MiOiJodHRwczovL3RyYW5zcG9ydGlvbi5oZXJva3VhcHAuY29tLyIsImV4cCI6MTY0NjU0MTgyNiwiZW1haWwiOiJnZW9yZ2VAa2Fzc2lnLmF0In0.Pp5UH1woXUTrpwvt6-nphGRob4nyEpdwGPJyjbLDsKVrG74nJgI6nbQPlxk61BRg"
+              }
+            },
+            "headers": {
+              "Content-Length": {
+                "type": "string",
+                "default": "365"
+              },
+              "Connection": {
+                "type": "string",
+                "default": "keep-alive"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ]
+      }
+    },
+    "/image": {
+      "get": {
+        "summary": "get all Images",
+        "tags": [
+          "image"
+        ],
+        "operationId": "getallImages",
+        "deprecated": false,
+        "produces": [
+          "application/json; charset=UTF-8"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "default": "",
+              "items": {
+                "$ref": "#/definitions/NewRequest"
+              }
+            },
+            "examples": {
+              "application/json; charset=UTF-8": [
+                {
+                  "id": "3cf0882e-d295-4b6f-8527-a14386514c40",
+                  "tookByUser": "george",
+                  "image": [
+                    97,
+                    115,
+                    115,
+                    105,
+                    103,
+                    110
+                  ],
+                  "takenDate": 1646506297726
+                },
+                {
+                  "id": "175fbb1b-9dca-4b54-8910-097492703c74",
+                  "tookByUser": "george",
+                  "image": [
+                    97,
+                    115,
+                    116,
+                    105,
+                    103,
+                    110
+                  ],
+                  "takenDate": 1646506297726
+                },
+                {
+                  "id": "ef716ba1-cc39-472d-9361-98d85fa8ca3f",
+                  "tookByUser": "my postman",
+                  "image": [
+                    97,
+                    115,
+                    115,
+                    105,
+                    103,
+                    110
+                  ],
+                  "takenDate": 1646519545474
+                }
+              ]
+            },
+            "headers": {
+              "Content-Length": {
+                "type": "string",
+                "default": "798"
+              },
+              "Connection": {
+                "type": "string",
+                "default": "keep-alive"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "delete Image",
+        "tags": [
+          "image"
+        ],
+        "operationId": "deleteImage",
+        "deprecated": false,
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": false,
+            "default": "Bearer {token}",
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "headers": {}
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "addImageRequest": {
+      "title": "addImageRequest",
+      "example": {
+        "userId": "069a30a3-a36e-4240-a09a-1afa62442b7b",
+        "image": {
+          "tookByUser": "george",
+          "image": [
+            97,
+            115,
+            115,
+            105,
+            103,
+            110
+          ]
+        }
+      },
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "image": {
+          "$ref": "#/definitions/Image"
+        }
+      },
+      "required": [
+        "userId",
+        "image"
+      ]
+    },
+    "Image": {
+      "title": "Image",
+      "example": {
+        "tookByUser": "george",
+        "image": [
+          97,
+          115,
+          115,
+          105,
+          103,
+          110
+        ]
+      },
+      "type": "object",
+      "properties": {
+        "tookByUser": {
+          "type": "string"
+        },
+        "image": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "required": [
+        "tookByUser",
+        "image"
+      ]
+    },
+    "editImageRequest": {
+      "title": "editImageRequest",
+      "example": {
+        "userId": "069a30a3-a36e-4240-a09a-1afa62442b7b",
+        "image": {
+          "tookByUser": "george",
+          "image": [
+            97,
+            115,
+            116,
+            105,
+            103,
+            110
+          ]
+        }
+      },
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "image": {
+          "$ref": "#/definitions/Image"
+        }
+      },
+      "required": [
+        "userId",
+        "image"
+      ]
+    },
+    "Sampleresponse:DetailsaboutauserbyID": {
+      "title": "Sampleresponse:DetailsaboutauserbyID",
+      "example": {
+        "id": "05f7a5d3-b062-4eb8-a619-9a40b6971b7f",
+        "email": "george@kassig.at",
+        "password": "george",
+        "userType": "DRIVER",
+        "firstname": null,
+        "lastname": null,
+        "createdBy": "599be892-4b31-486f-bd8e-d6760ce421f4"
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "userType": {
+          "type": "string"
+        },
+        "firstname": {
+          "type": "string"
+        },
+        "lastname": {
+          "type": "string"
+        },
+        "createdBy": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "email",
+        "password",
+        "userType",
+        "firstname",
+        "lastname",
+        "createdBy"
+      ]
+    },
+    "Unexpectederror1": {
+      "title": "Unexpectederror1",
+      "example": {
+        "code": 500,
+        "message": "Something went wrong"
+      },
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ]
+    },
+    "adduserrequest": {
+      "title": "adduserrequest",
+      "example": {
+        "email": "george@kassig.at",
+        "password": "george",
+        "userType": "GEORGE",
+        "createdBy": "599be892-4b31"
+      },
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "userType": {
+          "type": "string"
+        },
+        "createdBy": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "email",
+        "password",
+        "userType",
+        "createdBy"
+      ]
+    },
+    "getUser": {
+      "title": "getUser",
+      "example": {
+        "id": "069a30a3-a36e-4240-a09a-1afa62442b7b",
+        "email": "george@kassig.at",
+        "password": "george",
+        "userType": "GEORGE",
+        "createdBy": "599be892-4b31"
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "userType": {
+          "type": "string"
+        },
+        "createdBy": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "email",
+        "password",
+        "userType",
+        "createdBy"
+      ]
+    },
+    "updaterequest": {
+      "title": "updaterequest",
+      "example": {
+        "id": "069a30a3-a36e-4240-a09a-1afa62442b7b",
+        "firstname": "george",
+        "lastname": "kassih",
+        "phoneNr": "43290234908"
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "firstname": {
+          "type": "string"
+        },
+        "lastname": {
+          "type": "string"
+        },
+        "phoneNr": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "firstname",
+        "lastname",
+        "phoneNr"
+      ]
+    },
+    "update": {
+      "title": "update",
+      "example": {
+        "id": "069a30a3-a36e-4240-a09a-1afa62442b7b",
+        "email": "george@kassig.at",
+        "password": "george",
+        "userType": "GEORGE",
+        "firstname": "george",
+        "lastname": "kassih",
+        "phoneNr": "43290234908",
+        "createdBy": "599be892-4b31"
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "userType": {
+          "type": "string"
+        },
+        "firstname": {
+          "type": "string"
+        },
+        "lastname": {
+          "type": "string"
+        },
+        "phoneNr": {
+          "type": "string"
+        },
+        "createdBy": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "email",
+        "password",
+        "userType",
+        "firstname",
+        "lastname",
+        "phoneNr",
+        "createdBy"
+      ]
+    },
+    "loginrequest": {
+      "title": "loginrequest",
+      "example": {
+        "email": "george@kassig.at",
+        "password": "george"
+      },
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "email",
+        "password"
+      ]
+    },
+    "login": {
+      "title": "login",
+      "example": {
+        "Bearer": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiIsImF1ZCI6Imh0dHBzOi8vdHJhbnNwb3J0aW9uLmhlcm9rdWFwcC5jb20vbG9naW4iLCJ1c2VyX3R5cGUiOiJHRU9SR0UiLCJpc3MiOiJodHRwczovL3RyYW5zcG9ydGlvbi5oZXJva3VhcHAuY29tLyIsImV4cCI6MTY0NjU0MTgyNiwiZW1haWwiOiJnZW9yZ2VAa2Fzc2lnLmF0In0.Pp5UH1woXUTrpwvt6-nphGRob4nyEpdwGPJyjbLDsKVrG74nJgI6nbQPlxk61BRg"
+      },
+      "type": "object",
+      "properties": {
+        "Bearer": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "Bearer"
+      ]
+    },
+    "NewRequest": {
+      "title": "NewRequest",
+      "example": {
+        "id": "3cf0882e-d295-4b6f-8527-a14386514c40",
+        "tookByUser": "george",
+        "image": [
+          97,
+          115,
+          115,
+          105,
+          103,
+          110
+        ],
+        "takenDate": 1646506297726
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "tookByUser": {
+          "type": "string"
+        },
+        "image": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "takenDate": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "required": [
+        "id",
+        "tookByUser",
+        "image",
+        "takenDate"
+      ]
+    },
+    "getImage": {
+      "title": "getImage",
+      "example": {
+        "id": "175fbb1b-9dca-4b54-8910-097492703c74",
+        "tookByUser": "george",
+        "image": [
+          97,
+          115,
+          116,
+          105,
+          103,
+          110
+        ],
+        "takenDate": 1646506297726
+      },
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "tookByUser": {
+          "type": "string"
+        },
+        "image": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "takenDate": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "required": [
+        "id",
+        "tookByUser",
+        "image",
+        "takenDate"
+      ]
+    }
+  },
+  "security": [],
+  "tags": [
+    {
+      "name": "Images"
+    },
+    {
+      "name": "user"
+    },
+    {
+      "name": "auth"
+    },
+    {
+      "name": "image"
+    }
+  ]
+}

@@ -11,7 +11,7 @@ fun UserEntity.toUser(): UserDto {
         password = password,
         email = email,
         userType = userType,
-        pictureUrl = pic?.imageUri,
+        pictureUrl = picture?.imageUri,
         company=company?.name?:"",
         createdBy = createdBy.fullName(),
         createdDate = createdDate.millis,

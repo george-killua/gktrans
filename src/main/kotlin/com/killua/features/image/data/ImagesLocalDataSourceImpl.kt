@@ -5,9 +5,10 @@ import com.killua.features.user.data.dao.UserEntity
 import com.killua.features.vehiclemanager.accident.data.dao.AccidentEntity
 import com.killua.features.vehiclemanager.car.data.dao.CarEntity
 import com.killua.features.vehiclemanager.usedhistory.data.dao.UsedHistoryEntity
+import java.util.*
 
 class ImagesLocalDataSourceImpl : ImagesLocalDataSource {
-    override fun addUserImage(imagePath: String, user: UserEntity, currentUser: UserEntity): ImageEntity {
+    override suspend fun addUserImage(imagePath: String, user: UserEntity, currentUser: UserEntity): ImageEntity {
         return ImageEntity.new {
             this.imageUri = imagePath
             this.user = user
@@ -15,7 +16,7 @@ class ImagesLocalDataSourceImpl : ImagesLocalDataSource {
         }
     }
 
-    override fun addAccidentImage(imagePath: String, accident: AccidentEntity, currentUser: UserEntity): ImageEntity {
+    override suspend fun addAccidentImage(imagePath: String, accident: AccidentEntity, currentUser: UserEntity): ImageEntity {
         return ImageEntity.new {
             this.imageUri = imagePath
             this.accident = accident
@@ -23,7 +24,11 @@ class ImagesLocalDataSourceImpl : ImagesLocalDataSource {
         }
     }
 
-    override fun addUsedHistoryImage(imagePath: String, UsedHistoryEntity: UsedHistoryEntity, currentUser: UserEntity): ImageEntity {
+    override suspend fun addUsedHistoryImage(
+        imagePath: String,
+        UsedHistoryEntity: UsedHistoryEntity,
+        currentUser: UserEntity,
+    ): ImageEntity {
         return ImageEntity.new {
             this.imageUri = imagePath
             this.usedHistory = usedHistory
@@ -31,7 +36,7 @@ class ImagesLocalDataSourceImpl : ImagesLocalDataSource {
         }
     }
 
-    override fun addCarImage(imagePath: String, car: CarEntity, currentUser: UserEntity): ImageEntity {
+    override suspend fun addCarImage(imagePath: String, car: CarEntity, currentUser: UserEntity): ImageEntity {
         return ImageEntity.new {
             this.imageUri = imagePath
             this.car = car
@@ -39,11 +44,11 @@ class ImagesLocalDataSourceImpl : ImagesLocalDataSource {
         }
     }
 
-    override fun softDeleteImage(image: ImageEntity, currentUser: UserEntity) {
-        image.softDelete(currentUser)
+    override suspend fun softDeleteImage(imageId: UUID, currentUser: UserEntity) {
+        ImageEntity.findById(imageId)?.softDelete(currentUser)
     }
 
-    override fun cleanImageTable() {
+    override suspend fun cleanImageTable() {
         ImageEntity.all().map { it.delete() }
     }
 

@@ -2,7 +2,7 @@ package com.killua.features.user.domain.model
 
 @kotlinx.serialization.Serializable
 data class UserInfoDto(
-    val id: String,
+    var id: String?="",
     val firstname: String,
     val lastname: String,
     val phoneNumber: String,

@@ -20,7 +20,7 @@ class ImageEntity(id: EntityID<UUID>) : CommonEntity(id, ImagesTable) {
     var accident by AccidentEntity optionalReferencedOn ImagesTable.accident
     var user by UserEntity optionalReferencedOn ImagesTable.user
     var car by CarEntity optionalReferencedOn ImagesTable.car
-    var usedHistory by UsedHistoryEntity optionalReferencedOn ImagesTable.driverHistory
+    var usedHistory by UsedHistoryEntity optionalReferencedOn ImagesTable.usedHistory
 }
 
 object ImagesTable : CommonTable("images") {
@@ -28,7 +28,7 @@ object ImagesTable : CommonTable("images") {
     val accident = reference("accident", AccidentTable).nullable().default(null)
     val user = reference("user_image", UserTable).nullable().default(null)
     val car = reference("car_image", CarTable).nullable().default(null)
-    val driverHistory = reference("driver_history", UsedHistoryTable).nullable().default(null)
+    val usedHistory = reference("used_history", UsedHistoryTable).nullable().default(null)
 }
 
 

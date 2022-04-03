@@ -1,47 +1,34 @@
 package com.killua.plugins
 
+import com.killua.extenstions.encoded
+import com.killua.features.user.data.dao.UserEntity
+import com.killua.features.user.domain.UserRepository
 import io.ktor.auth.*
-import io.ktor.util.*
 import io.ktor.application.*
 import io.ktor.response.*
-import io.ktor.request.*
 import io.ktor.routing.*
-
+import org.koin.ktor.ext.inject
+const val AUTHENTICATION_HEADER="parameterization"
 fun Application.configureSecurity() {
-
+val userRepository by inject<UserRepository>()
     authentication {
-        basic(name = "myauth1") {
+        basic(name = AUTHENTICATION_HEADER) {
             realm = "Ktor Server"
             validate { credentials ->
-                if (credentials.name == credentials.password) {
-                    UserIdPrincipal(credentials.name)
-                } else {
-                    null
-                }
+              userRepository.getUserLoginCredential(credentials.name , credentials.password.encoded())
             }
         }
 
-        form(name = "myauth2") {
-            userParamName = "user"
-            passwordParamName = "password"
-            challenge {
-                /**/
-            }
-        }
+
     }
 
     routing {
-        authenticate("myauth1") {
+        authenticate(AUTHENTICATION_HEADER) {
             get("/protected/route/basic") {
                 val principal = call.principal<UserIdPrincipal>()!!
                 call.respondText("Hello ${principal.name}")
             }
         }
-        authenticate("myauth1") {
-            get("/protected/route/form") {
-                val principal = call.principal<UserIdPrincipal>()!!
-                call.respondText("Hello ${principal.name}")
-            }
-        }
+
     }
 }
