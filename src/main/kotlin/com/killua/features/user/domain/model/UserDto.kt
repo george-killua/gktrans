@@ -1,5 +1,7 @@
 package com.killua.features.user.domain.model
 
+import com.killua.features.company.data.dao.CompanyEntity
+
 @kotlinx.serialization.Serializable
 data class UserDto(
     val id: String? = null,
@@ -12,5 +14,7 @@ data class UserDto(
     val updatedBy: String? = "",
     val updatedDate: Long? = null,
     val deletedBy: String? = "",
-    val deletedDate: Long? = null
-)
+    val deletedDate: Long? = null,
+    val company:String?=null
+) {
+}

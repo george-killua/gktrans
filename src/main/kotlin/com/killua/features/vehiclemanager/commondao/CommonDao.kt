@@ -33,7 +33,7 @@ abstract class CommonEntity(id: EntityID<UUID>, commonTable: CommonTable) : UUID
 
 
 
-    fun cleanSomeShit(): Int {
+    fun cleanSomeOfIt(): Int {
         return deletedDate?.let {
             if (it.minusDays(15).dayOfMonth > 0)
                delete()

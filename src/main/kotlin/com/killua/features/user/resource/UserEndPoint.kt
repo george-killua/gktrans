@@ -7,10 +7,12 @@ import com.killua.features.user.domain.model.UserDto
 import com.killua.features.user.domain.model.UserType
 import io.ktor.application.*
 import io.ktor.http.*
+import io.ktor.http.cio.websocket.*
 import io.ktor.locations.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import io.ktor.websocket.*
 import org.koin.ktor.ext.inject
 
 @kotlinx.serialization.Serializable
@@ -37,9 +39,7 @@ fun Application.userEndpoint() {
                     userType = UserType.valueOf(signupRequest.userType)
                 )
 
-                val created = userRepository.createUser(user)
 
-                call.respond(HttpStatusCode.Created, created.toString())
 
             }
             //get all users
@@ -47,10 +47,8 @@ fun Application.userEndpoint() {
 
                 val user: Any? = when (val id = call.request.queryParameters["id"]) {
                     null -> {
-                        userRepository.getAllUsers()
                     }
                     else -> {
-                        userRepository.getUser(id)
                     }
                 }
                 val response = user ?: "No user found"
@@ -64,10 +62,7 @@ fun Application.userEndpoint() {
                     call.respond(HttpStatusCode.BadRequest)
                     return@delete
                 }
-                val result = userRepository.removeUser(userId)
-                if (result)
-                    call.respond(HttpStatusCode.Accepted)
-                else call.respond(HttpStatusCode.BadRequest)
+               call.respond(HttpStatusCode.BadRequest)
             }
 
 

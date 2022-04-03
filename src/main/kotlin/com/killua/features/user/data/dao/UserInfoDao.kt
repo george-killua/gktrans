@@ -10,7 +10,7 @@ class UserInfoEntity(id: EntityID<UUID>) : CommonEntity(id,UserInfosTable) {
 
     var firstname by UserInfosTable.firstname
     var lastname by UserInfosTable.lastname
-    var phoneNr by UserInfosTable.phoneNumber
+    var phoneNumber by UserInfosTable.phoneNumber
     var sex by UserInfosTable.sex
     var street by UserInfosTable.street
     var streetNr by UserInfosTable.streetNr

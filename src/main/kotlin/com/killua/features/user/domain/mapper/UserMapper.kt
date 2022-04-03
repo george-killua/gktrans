@@ -12,19 +12,21 @@ fun UserEntity.toUser(): UserDto {
         email = email,
         userType = userType,
         pictureUrl = pic?.imageUri,
+        company=company?.name?:"",
         createdBy = createdBy.fullName(),
         createdDate = createdDate.millis,
         updatedBy = updatedBy?.fullName(),
         updatedDate = updatedDate?.millis,
         deletedBy = deletedBy?.fullName(),
-        deletedDate = deletedDate?.millis    )
+        deletedDate = deletedDate?.millis
+    )
 }
 
 fun UserInfoEntity.toUserInfo() = UserInfoDto(
     id = id.value.toString(),
     firstname = firstname ?: "",
     lastname = lastname ?: "",
-    phoneNumber = phoneNr ?: "",
+    phoneNumber = phoneNumber ?: "",
     nationality = nationality ?: "",
     sex = sex ?: "",
     street = street ?: "",
