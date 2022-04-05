@@ -4,7 +4,6 @@ package com.killua.plugins
 
 import com.killua.features.image.resource.imageEndpoint
 import io.ktor.application.*
-import io.ktor.auth.*
 import io.ktor.http.content.*
 import io.ktor.locations.*
 import io.ktor.response.*

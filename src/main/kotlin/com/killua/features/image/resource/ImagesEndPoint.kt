@@ -3,12 +3,12 @@
 package com.killua.features.image.resource
 
 import com.killua.features.image.domain.ImagesRepository
-import com.killua.features.image.domain.model.ImageDto
 import com.killua.plugins.AUTHENTICATION_HEADER
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.locations.*
-import io.ktor.request.*
+import io.ktor.locations.post
+import io.ktor.locations.get
 import io.ktor.response.*
 import io.ktor.routing.*
 import org.koin.ktor.ext.inject
@@ -47,31 +47,27 @@ fun Application.imageEndpoint() {
             get<ImageIndex> {
                 call.respond("did it")
             }
-            get<ImageIndex.AddUserImage> {
+            post<ImageIndex.AddUserImage> {
                 call.respond("did it")
-
-
             }
-            route("") {
+            post<ImageIndex.AddCarImage> {
+                call.respond("did it")
+            }
+            post<ImageIndex.AddAccidentImage> {
+                call.respond("did it")
+            }
+            post<ImageIndex.AddUsedHistoryImage> {
+                call.respond("did it")
+            }
+            delete<ImageIndex.DeleteImage> { it ->
 
-                //create image request
+                call.respond(("image deleted ${it.imageId}"))
+            }
+            delete<ImageIndex.CleanImagesTable> { it ->
 
-                post("/user") {
-                    val image = call.receive<ImageDto>()
-
-
-                }
-                //get all images
-
-
-                //update user details
-
-                delete<ImageIndex.DeleteImage> { it ->
-
-                    call.respond(("image deleted ${it.imageId}"))
-                }
-
+                call.respond(("image deleted  clean table"))
             }
         }
     }
 }
+

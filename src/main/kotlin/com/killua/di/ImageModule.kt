@@ -9,5 +9,5 @@ import org.koin.dsl.module
 
 val imageModule = module {
     single { ImagesLocalDataSourceImpl() } bind ImagesLocalDataSource::class
-    single { ImagesRepositoryImpl(get(),get(),get(),get()) } bind ImagesRepository::class
+    single { ImagesRepositoryImpl(get(), get(), get(), get(), get()) } bind ImagesRepository::class
 }

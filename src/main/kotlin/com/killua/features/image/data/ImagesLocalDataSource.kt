@@ -19,6 +19,6 @@ interface ImagesLocalDataSource {
    suspend fun addCarImage(imagePath: String, car: CarEntity, currentUser: UserEntity): ImageEntity
    suspend fun softDeleteImage(imageId: UUID, currentUser: UserEntity)
 
-   suspend fun cleanImageTable()
+   suspend fun cleanImageTable(): Int
 
 }

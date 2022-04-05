@@ -2,16 +2,16 @@ package com.killua
 
 import com.killua.config.AppConfig
 import com.killua.di.applicationModule
+import com.killua.di.imageModule
+import com.killua.di.userModule
 import com.killua.extenstions.DatabaseExt
 import com.killua.plugins.*
 import io.ktor.application.*
 import io.ktor.locations.*
 import io.ktor.server.engine.*
-import org.koin.core.logger.Level
 import org.koin.core.module.Module
 import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.inject
-import org.koin.logger.slf4jLogger
 
 fun main(args: Array<String>): Unit =
     io.ktor.server.netty.EngineMain.main(args)
@@ -21,8 +21,9 @@ fun main(args: Array<String>): Unit =
 @Suppress("unused") // application.conf references the main function. This annotation prevents the IDE from marking it as unused.
 fun Application.module(
     koinModules: List<Module> = listOf(
-
-        applicationModule
+        applicationModule,
+        imageModule,
+        userModule
     ),
 ) {
     install(Koin) {

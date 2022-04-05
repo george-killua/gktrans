@@ -10,8 +10,8 @@ import java.util.*
 interface UserLocalDataSource {
     suspend fun getAllUsers(companyId: UUID): List<UserEntity>
     suspend fun getAllUsers(): List<UserEntity>
-    suspend fun getUser(uuid: UUID): UserEntity?
-    suspend fun getUserInfo(uuid: UUID): UserInfoEntity?
+    suspend fun getUser(userId: UUID): UserEntity?
+    suspend fun getUserInfo(userId: UUID): UserInfoEntity?
     suspend fun getUserLoginCredential(email: String, password: String): UserEntity?
     suspend fun addUser(user: UserDto, currentUser: UserEntity): UserEntity
     suspend fun addUserInfo(userId: UUID, userInfo: UserInfoDto, currentUser: UserEntity): UserInfoEntity?

@@ -20,12 +20,12 @@ class UserLocalDataSourceImpl() : UserLocalDataSource {
         return UserEntity.all().toList()
     }
 
-    override suspend fun getUser(uuid: UUID): UserEntity? {
-        return UserEntity.findById(uuid)
+    override suspend fun getUser(userId: UUID): UserEntity? {
+        return UserEntity.findById(userId)
     }
 
-    override suspend fun getUserInfo(uuid: UUID): UserInfoEntity? {
-        return UserEntity.findById(uuid)?.userInfo
+    override suspend fun getUserInfo(userId: UUID): UserInfoEntity? {
+        return UserEntity.findById(userId)?.userInfo
     }
 
     override suspend fun getUserLoginCredential(email: String, password: String): UserEntity? {

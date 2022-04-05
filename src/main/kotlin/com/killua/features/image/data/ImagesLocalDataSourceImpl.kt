@@ -48,8 +48,8 @@ class ImagesLocalDataSourceImpl : ImagesLocalDataSource {
         ImageEntity.findById(imageId)?.softDelete(currentUser)
     }
 
-    override suspend fun cleanImageTable() {
-        ImageEntity.all().map { it.delete() }
+    override suspend fun cleanImageTable(): Int {
+       return ImageEntity.all().sumOf { it.cleanSomeOfIt() }
     }
 
 }
