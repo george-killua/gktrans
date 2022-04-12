@@ -15,6 +15,6 @@ data class UserDto(
     val updatedDate: Long? = null,
     val deletedBy: String? = "",
     val deletedDate: Long? = null,
-    val company:CompanyMentionDto?=null
-) {
-}
+    val company: CompanyMentionDto? = null,
+)
+

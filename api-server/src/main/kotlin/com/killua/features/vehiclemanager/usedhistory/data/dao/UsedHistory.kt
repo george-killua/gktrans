@@ -16,6 +16,7 @@ import java.util.*
 
 class UsedHistoryEntity(id: EntityID<UUID>) : CommonEntity(id, UsedHistoryTable) {
     companion object : UUIDEntityClass<UsedHistoryEntity>(UsedHistoryTable)
+
     var user by UserEntity referencedOn UsedHistoryTable.user
     var car by CarEntity referencedOn UsedHistoryTable.car
     val images by ImageEntity optionalReferrersOn ImagesTable.usedHistory

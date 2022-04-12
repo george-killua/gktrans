@@ -1,9 +1,11 @@
 object Dependencies {
 
-    object JUnit {
+    object Test {
         const val jupiterApi = "org.junit.jupiter:junit-jupiter-api:${Versions.jUnit}"
         const val jupiterParams = "org.junit.jupiter:junit-jupiter-params:${Versions.jUnit}"
         const val jupiterEngine = "org.junit.jupiter:junit-jupiter-engine:${Versions.jUnit}"
+        const val kluent = "org.amshove.kluent:kluent:${Versions.kluent}"
+
     }
 
     object Kotlinx {
@@ -42,4 +44,11 @@ object Dependencies {
         const val hikariCP = "com.zaxxer:HikariCP:${Versions.hikariCPVersion}"
         const val postgresql = "org.postgresql:postgresql:${Versions.postgresqlVersion}"
     }
+    object Koin {
+        const val koinKtor="io.insert-koin:koin-ktor:${Versions.koinVersion}"
+        const val KoinLogger="io.insert-koin:koin-logger-slf4j:${Versions.koinVersion}"
+        const val CoinTestingJunit="io.insert-koin:koin-test-junit5:${Versions.koinVersion}"
+        const val KoinTesting="io.insert-koin:koin-test:${Versions.koinVersion}"
+    }
+
 }

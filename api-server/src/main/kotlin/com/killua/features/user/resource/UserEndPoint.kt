@@ -2,7 +2,7 @@
 
 package com.killua.features.user.resource
 
-import com.killua.features.user.domain.UserRepository
+import com.killua.features.user.domain.UsersRepo
 import com.killua.features.user.domain.model.UserInfoDto
 import io.ktor.application.*
 import io.ktor.locations.*
@@ -13,7 +13,7 @@ import org.koin.ktor.ext.inject
 
 //
 @Location("/user/")
-class UserIndex(val userid: String?=null) {
+class UserIndex(val userid: String? = null) {
     //
     @Location("/all-company-id")
     data class GetAllUsers(val companyId: String?)
@@ -61,16 +61,16 @@ class UserIndex(val userid: String?=null) {
     data class DeleteUserInfo(val userIndex: UserIndex)
 
     @Location("/clean-user-table")
-    class CleanUsersTable()
+    class CleanUsersTable
 
     @Location("/clean-info-table")
-    class CleanUserInfoTable()
+    class CleanUserInfoTable
 }
 
 fun Route.userEndpoint() {
 
 
-    val userRepository by inject<UserRepository>()
+    val usersRepo by inject<UsersRepo>()
 
 
     get<UserIndex.GetAllUsers> {
@@ -79,7 +79,7 @@ fun Route.userEndpoint() {
     get<UserIndex.GetUser> {
         call.respond("GetUser user is ${it.userIndex.userid}")
     }
-    post<UserIndex.GetUserInfo> {user->
+    post<UserIndex.GetUserInfo> { user ->
         call.respond("did it user is ${user.userIndex.userid}")
     }
     post<UserIndex.AddUser> {

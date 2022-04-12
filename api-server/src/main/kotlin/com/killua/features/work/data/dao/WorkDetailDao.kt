@@ -1,15 +1,16 @@
 package com.killua.features.work.data.dao
 
-import com.killua.features.vehiclemanager.commondao.CommonEntity
-import com.killua.features.vehiclemanager.commondao.CommonTable
 import com.killua.features.company.data.dao.CompanyEntity
 import com.killua.features.company.data.dao.CompanyTable
 import com.killua.features.user.data.dao.UserEntity
 import com.killua.features.user.data.dao.UserTable
+import com.killua.features.vehiclemanager.commondao.CommonEntity
+import com.killua.features.vehiclemanager.commondao.CommonTable
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.jodatime.date
 import java.util.*
+
 object WorkDetailTable : CommonTable("work_details") {
     val company = reference("company", CompanyTable)
     val holiday = reference("holiday", HolidayTable)
@@ -20,7 +21,7 @@ object WorkDetailTable : CommonTable("work_details") {
     val salary = float("salary")
 }
 
-class WorkDetailEntity(id: EntityID<UUID>) : CommonEntity(id,WorkDetailTable) {
+class WorkDetailEntity(id: EntityID<UUID>) : CommonEntity(id, WorkDetailTable) {
     companion object : UUIDEntityClass<WorkDetailEntity>(WorkDetailTable)
 
     val company by CompanyEntity referencedOn WorkDetailTable.company

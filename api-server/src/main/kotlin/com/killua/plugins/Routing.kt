@@ -17,14 +17,14 @@ fun Application.configureRouting() {
 
 
 
-    routing() {
-route("/api"){
+    routing {
+        route("/api") {
 
-      route("/v1") {
-          imageEndpoint()
-          userEndpoint()
-      }
-}
+            route("/v1") {
+                imageEndpoint()
+                userEndpoint()
+            }
+        }
         get("/") {
             call.respondText("Hello World!")
         }

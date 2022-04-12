@@ -21,5 +21,4 @@ data class UserInfoDto(
     val deletedBy: String? = "",
     val deletedDate: Long? = null,
 
-    ) {
-}
+    )

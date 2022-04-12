@@ -4,12 +4,12 @@ import com.killua.extenstions.getSessionId
 import com.killua.extenstions.user
 import com.killua.features.user.domain.mapper.toUserDto
 import com.killua.features.user.domain.model.UserDto
+import com.killua.logger.ApiLogger
 import io.ktor.http.cio.websocket.*
 import io.ktor.routing.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.channels.consumeEach
 import org.koin.ktor.ext.inject
-import com.killua.logger.ApiLogger
 
 
 fun Route.notesSocket() {
@@ -30,13 +30,13 @@ fun Route.notesSocket() {
             incoming.consumeEach { frame ->
                 apiLogger.log("Socket incoming frame", frame.toString())
 
-             getUser()?.let { user ->
+                getUser()?.let { user ->
                     apiLogger.log("Socket incoming user", user.toString())
                     socketServer.addListener(sessionId, user, this)
                 }
             }
         } finally {
-           getUser()?.let { user ->
+            getUser()?.let { user ->
                 apiLogger.log("Socket ended", user.toString())
                 socketServer.removeListener(sessionId, user, this)
             }

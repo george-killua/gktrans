@@ -1,39 +1,41 @@
 package com.killua.di
 
-import com.killua.features.company.data.CompanyLDS
-import com.killua.features.company.data.CompanyLDSImpl
-import com.killua.features.company.domain.CompanyRepository
-import com.killua.features.company.domain.CompanyRepositoryImpl
-import com.killua.features.image.data.ImagesLocalDataSource
-import com.killua.features.image.data.ImagesLocalDataSourceImpl
-import com.killua.features.image.domain.ImagesRepository
-import com.killua.features.image.domain.ImagesRepositoryImpl
+import com.killua.features.company.data.CompaniesLDS
+import com.killua.features.company.data.CompaniesLDSImpl
+import com.killua.features.company.domain.CompaniesRepo
+import com.killua.features.company.domain.CompaniesRepoImpl
+import com.killua.features.image.data.ImagesLds
+import com.killua.features.image.data.ImagesLdsImpl
+import com.killua.features.image.domain.ImagesRepo
+import com.killua.features.image.domain.ImagesRepoImpl
 import com.killua.features.user.data.UserLocalDataSource
 import com.killua.features.user.data.UserLocalDataSourceImpl
-import com.killua.features.user.domain.UserRepository
-import com.killua.features.user.domain.UserRepositoryImpl
-import com.killua.features.vehiclemanager.accident.data.AccidentsLocalDataSource
-import com.killua.features.vehiclemanager.accident.data.AccidentsLocalDataSourceImpl
-import com.killua.features.vehiclemanager.car.data.CarsLocalDataSource
-import com.killua.features.vehiclemanager.car.data.CarsLocalDataSourceImpl
-import com.killua.features.vehiclemanager.usedhistory.data.UsedHistoriesLocalDataSource
-import com.killua.features.vehiclemanager.usedhistory.data.UsedHistoriesLocalDataSourceImpl
+import com.killua.features.user.domain.UserRepoImpl
+import com.killua.features.user.domain.UsersRepo
+import com.killua.features.vehiclemanager.accident.data.AccidentsLdsImpl
+import com.killua.features.vehiclemanager.accident.data.AccidentsLds
+import com.killua.features.vehiclemanager.car.data.CarsLds
+import com.killua.features.vehiclemanager.car.data.CarsLdsImpl
+import com.killua.features.vehiclemanager.usedhistory.data.UsedHistoriesLds
+import com.killua.features.vehiclemanager.usedhistory.data.UsedHistoriesLdsImpl
+import kotlinx.coroutines.Dispatchers
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val featuresModule = module {
     //userModule
     single { UserLocalDataSourceImpl() } bind UserLocalDataSource::class
-    single { UserRepositoryImpl(get()) } bind UserRepository::class
+    single { UserRepoImpl(get(),Dispatchers.IO) } bind UsersRepo::class
     //companyModule
-    single { CompanyLDSImpl(get()) } bind CompanyLDS::class
-    single { CompanyRepositoryImpl(get()) } bind CompanyRepository::class
+    single { CompaniesLDSImpl() } bind CompaniesLDS::class
+  //  single { CompaniesRepoImpl(get()) } bind CompaniesRepo::class
 
     //imageModule
-    single { ImagesLocalDataSourceImpl() } bind ImagesLocalDataSource::class
-    single { ImagesRepositoryImpl(get(), get(), get(), get(), get()) } bind ImagesRepository::class
+    single { ImagesLdsImpl() } bind ImagesLds::class
+    single { ImagesRepoImpl(get(), get(), get(), get(), get()) } bind ImagesRepo::class
     //accidentModule
-    single { AccidentsLocalDataSourceImpl() } bind AccidentsLocalDataSource::class
-    single { UsedHistoriesLocalDataSourceImpl() } bind UsedHistoriesLocalDataSource::class
-    single { CarsLocalDataSourceImpl() } bind CarsLocalDataSource::class
+    single { AccidentsLdsImpl() } bind AccidentsLds::class
+    single { UsedHistoriesLdsImpl() } bind UsedHistoriesLds::class
+    //car
+    single { CarsLdsImpl() } bind CarsLds::class
 }

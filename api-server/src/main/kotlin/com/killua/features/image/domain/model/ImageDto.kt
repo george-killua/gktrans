@@ -12,6 +12,4 @@ data class ImageDto(
     val updatedBy: String? = null,
     val deletedAt: Long? = null,
     val deletedBy: String? = null,
-) {
-
-}
+)

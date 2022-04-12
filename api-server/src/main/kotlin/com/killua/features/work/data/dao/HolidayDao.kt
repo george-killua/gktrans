@@ -1,25 +1,27 @@
 package com.killua.features.work.data.dao
 
-import com.killua.features.vehiclemanager.commondao.CommonEntity
-import com.killua.features.vehiclemanager.commondao.CommonTable
 import com.killua.features.user.data.dao.UserEntity
 import com.killua.features.user.data.dao.UserTable
+import com.killua.features.vehiclemanager.commondao.CommonEntity
+import com.killua.features.vehiclemanager.commondao.CommonTable
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.minus
 import org.jetbrains.exposed.sql.jodatime.date
 import org.jetbrains.exposed.sql.jodatime.day
 import java.util.*
+
 object HolidayTable : CommonTable("holidays") {
     val user = reference("user", UserTable)
     val holidayStartDate = date("holiday_start_date")
     val holidayEndDate = date("holiday_end_date")
     val daysOfHoliday = integer("days_of_holiday").nullable()
         .default(holidayEndDate.day().minus(holidayStartDate.day()).toString().toIntOrNull())
- }
+}
 
-class HolidayEntity(id: EntityID<UUID>) : CommonEntity(id,HolidayTable) {
+class HolidayEntity(id: EntityID<UUID>) : CommonEntity(id, HolidayTable) {
     companion object : UUIDEntityClass<HolidayEntity>(HolidayTable)
+
     val user by UserEntity referencedOn HolidayTable.user
     val holidayStart by HolidayTable.holidayStartDate
     val holidayEndDate by HolidayTable.holidayEndDate

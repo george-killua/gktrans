@@ -1,22 +1,22 @@
 package com.killua.features.image.domain
 
 import com.killua.extenstions.toUuid
-import com.killua.features.image.data.ImagesLocalDataSource
+import com.killua.features.image.data.ImagesLds
 import com.killua.features.image.domain.mapper.toImageDto
 import com.killua.features.image.domain.model.ImageDto
 import com.killua.features.user.data.UserLocalDataSource
 import com.killua.features.user.data.dao.UserEntity
-import com.killua.features.vehiclemanager.accident.data.AccidentsLocalDataSource
-import com.killua.features.vehiclemanager.car.data.CarsLocalDataSource
-import com.killua.features.vehiclemanager.usedhistory.data.UsedHistoriesLocalDataSource
+import com.killua.features.vehiclemanager.accident.data.AccidentsLds
+import com.killua.features.vehiclemanager.car.data.CarsLds
+import com.killua.features.vehiclemanager.usedhistory.data.UsedHistoriesLds
 
-class ImagesRepositoryImpl(
+class ImagesRepoImpl(
     private val usersLds: UserLocalDataSource,
-    private val imageLds: ImagesLocalDataSource,
-    private val carLds: CarsLocalDataSource,
-    private val accidentLds: AccidentsLocalDataSource,
-    private val usedHistoryLds: UsedHistoriesLocalDataSource,
-) : ImagesRepository {
+    private val imageLds: ImagesLds,
+    private val carLds: CarsLds,
+    private val accidentLds: AccidentsLds,
+    private val usedHistoryLds: UsedHistoriesLds,
+) : ImagesRepo {
     override suspend fun addUserImage(imagePath: String, userId: String, currentUser: UserEntity): ImageDto? {
         return usersLds.getUser(userId.toUuid())
             ?.let { imageLds.addUserImage(imagePath, it, currentUser).toImageDto() }

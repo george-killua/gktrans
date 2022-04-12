@@ -6,6 +6,7 @@ import com.killua.features.user.domain.mapper.toUserDto
 import com.killua.features.vehiclemanager.accident.domain.mapper.toAccidentDto
 import com.killua.features.vehiclemanager.car.data.dao.CarEntity
 import com.killua.features.vehiclemanager.car.domain.model.CarDto
+import com.killua.features.vehiclemanager.car.domain.model.CarMentionDto
 import com.killua.features.vehiclemanager.car.info.domain.mapper.toCarInfoDto
 import com.killua.features.vehiclemanager.usedhistory.domain.mapper.toUsedHistoryDto
 
@@ -25,6 +26,20 @@ fun CarEntity.toCarDto(): CarDto {
         currentDriver = currentDriver?.toUserDto(),
         accidents = accidents.map { it.toAccidentDto() },
         usedHistories = usedHistories.map { it.toUsedHistoryDto() },
+        images = images.map { it.toImageDto() }
+
+    )
+}
+
+fun CarEntity.toCarMentionDto(): CarMentionDto {
+    return CarMentionDto(
+        id = id.value.toString(),
+        owner = owner?.toUserDto(),
+        vehicleRegistration = vehicleRegistration,
+        vehicleMake = vehicleMake,
+        vehicleType = vehicleType,
+        fuelType = fuelType,
+        currentDriver = currentDriver?.toUserDto(),
         images = images.map { it.toImageDto() }
 
     )

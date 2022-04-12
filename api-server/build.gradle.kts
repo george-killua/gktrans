@@ -30,6 +30,7 @@ dependencies {
     implementation(Ktor.kotlinxSerialization)
 
     implementation(Ktor.htmlBuilder)
+    implementation("org.junit.jupiter:junit-jupiter:5.8.2")
     testImplementation(Ktor.cssJvm)
     implementation(Ktor.micrometer)
     implementation(Ktor.prometheus)
@@ -50,9 +51,20 @@ dependencies {
     //hasher
     implementation("de.nycode:bcrypt:2.3.0")
     sshAntTask("org.apache.ant:ant-jsch:1.10.12")
+    implementation(Dependencies.Koin.koinKtor)
+    implementation(Dependencies.Koin.KoinLogger)
+    testImplementation(Dependencies.Koin.KoinTesting)
+    testImplementation(Dependencies.Koin.CoinTestingJunit)
+    testImplementation(Dependencies.Test.kluent)
 
 }
-
+tasks {
+    withType<KotlinCompile> {
+        kotlinOptions {
+            freeCompilerArgs += listOf("-Xskip-prerelease-check")
+        }
+    }
+}
 tasks {
 
     withType<KotlinCompile>().all {
@@ -126,4 +138,8 @@ task("deploy") {
             }
         }
     }
+}
+val compileKotlin: KotlinCompile by tasks
+compileKotlin.kotlinOptions {
+    languageVersion = "1.7"
 }

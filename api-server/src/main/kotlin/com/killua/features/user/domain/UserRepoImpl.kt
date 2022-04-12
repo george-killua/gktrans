@@ -8,8 +8,9 @@ import com.killua.features.user.domain.mapper.toUserInfo
 import com.killua.features.user.domain.model.UserDto
 import com.killua.features.user.domain.model.UserInfoDto
 import com.killua.features.user.domain.model.UserType
+import kotlinx.coroutines.CoroutineDispatcher
 
-class UserRepositoryImpl(private val userLds: UserLocalDataSource) : UserRepository {
+class UserRepoImpl(private val userLds: UserLocalDataSource, private val dispatcher: CoroutineDispatcher) : UsersRepo {
     override suspend fun getAllUsers(companyId: String): List<UserDto> {
         return userLds.getAllUsers(companyId.toUuid()).map { it.toUserDto() }
     }
@@ -37,6 +38,7 @@ class UserRepositoryImpl(private val userLds: UserLocalDataSource) : UserReposit
     override suspend fun addUserInfo(userID: String, userInfo: UserInfoDto, currentUser: UserEntity): UserInfoDto? {
         return userLds.addUserInfo(userID.toUuid(), userInfo, currentUser)?.toUserInfo()
     }
+
     override suspend fun updateUserEmail(userId: String, email: String, currentUser: UserEntity): UserDto? {
         return userLds.updateUserEmail(userId.toUuid(), email, currentUser)?.toUserDto()
     }
@@ -66,6 +68,6 @@ class UserRepositoryImpl(private val userLds: UserLocalDataSource) : UserReposit
     }
 
     override suspend fun cleanUserInfoTable(): Int {
-      return  userLds.cleanUserInfoTable()
+        return userLds.cleanUserInfoTable()
     }
 }

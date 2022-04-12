@@ -7,7 +7,7 @@ import com.killua.features.vehiclemanager.car.data.dao.CarEntity
 import com.killua.features.vehiclemanager.usedhistory.data.dao.UsedHistoryEntity
 import java.util.*
 
-class ImagesLocalDataSourceImpl : ImagesLocalDataSource {
+class ImagesLdsImpl : ImagesLds {
     override suspend fun addUserImage(imagePath: String, user: UserEntity, currentUser: UserEntity): ImageEntity {
         return ImageEntity.new {
             this.imageUri = imagePath
@@ -16,7 +16,11 @@ class ImagesLocalDataSourceImpl : ImagesLocalDataSource {
         }
     }
 
-    override suspend fun addAccidentImage(imagePath: String, accident: AccidentEntity, currentUser: UserEntity): ImageEntity {
+    override suspend fun addAccidentImage(
+        imagePath: String,
+        accident: AccidentEntity,
+        currentUser: UserEntity,
+    ): ImageEntity {
         return ImageEntity.new {
             this.imageUri = imagePath
             this.accident = accident
@@ -49,7 +53,7 @@ class ImagesLocalDataSourceImpl : ImagesLocalDataSource {
     }
 
     override suspend fun cleanImageTable(): Int {
-       return ImageEntity.all().sumOf { it.cleanSomeOfIt() }
+        return ImageEntity.all().sumOf { it.cleanSomeOfIt() }
     }
 
 }

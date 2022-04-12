@@ -1,11 +1,11 @@
 package com.killua.features.work.data.dao
 
-import com.killua.features.vehiclemanager.commondao.CommonEntity
-import com.killua.features.vehiclemanager.commondao.CommonTable
 import com.killua.features.company.data.dao.CompanyEntity
 import com.killua.features.company.data.dao.CompanyTable
 import com.killua.features.user.data.dao.UserEntity
 import com.killua.features.user.data.dao.UserTable
+import com.killua.features.vehiclemanager.commondao.CommonEntity
+import com.killua.features.vehiclemanager.commondao.CommonTable
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.jodatime.date
@@ -21,7 +21,7 @@ object WorkPlanTable : CommonTable("work_plan") {
     val packagesCount = integer("packages_count")
 }
 
-class WorkPlanEntity(id: EntityID<UUID>) : CommonEntity(id,WorkPlanTable) {
+class WorkPlanEntity(id: EntityID<UUID>) : CommonEntity(id, WorkPlanTable) {
     companion object : UUIDEntityClass<WorkPlanEntity>(WorkPlanTable)
 
     val user by UserEntity referencedOn WorkPlanTable.user

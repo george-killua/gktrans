@@ -1,12 +1,9 @@
 package com.killua.plugins
 
-import io.ktor.html.*
-import kotlinx.html.*
-import io.ktor.http.*
 import io.ktor.application.*
-import io.ktor.response.*
-import io.ktor.request.*
+import io.ktor.html.*
 import io.ktor.routing.*
+import kotlinx.html.*
 
 fun Application.configureTemplating() {
 

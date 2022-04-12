@@ -1,20 +1,21 @@
 package com.killua.plugins
 
 import com.killua.extenstions.encoded
-import com.killua.features.user.domain.UserRepository
-import io.ktor.auth.*
+import com.killua.features.user.domain.UsersRepo
 import io.ktor.application.*
+import io.ktor.auth.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import org.koin.ktor.ext.inject
-const val AUTHENTICATION_HEADER="parameterization"
+
+const val AUTHENTICATION_HEADER = "parameterization"
 fun Application.configureSecurity() {
-val userRepository by inject<UserRepository>()
+    val usersRepo by inject<UsersRepo>()
     authentication {
         basic(name = AUTHENTICATION_HEADER) {
             realm = "Ktor Server"
             validate { credentials ->
-              userRepository.getUserLoginCredential(credentials.name , credentials.password.encoded())
+                usersRepo.getUserLoginCredential(credentials.name, credentials.password.encoded())
             }
         }
 

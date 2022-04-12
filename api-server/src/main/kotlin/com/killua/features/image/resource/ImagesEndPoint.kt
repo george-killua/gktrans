@@ -2,7 +2,7 @@
 
 package com.killua.features.image.resource
 
-import com.killua.features.image.domain.ImagesRepository
+import com.killua.features.image.domain.ImagesRepo
 import com.killua.plugins.AUTHENTICATION_HEADER
 import io.ktor.application.*
 import io.ktor.auth.*
@@ -13,7 +13,7 @@ import io.ktor.routing.*
 import org.koin.ktor.ext.inject
 
 @Location("/image")
-class ImageIndex() {
+class ImageIndex {
     @Location("/user")
     data class AddUserImage(val userId: String)
 
@@ -30,7 +30,7 @@ class ImageIndex() {
     data class DeleteImage(val imageId: String)
 
     @Location("/clean-table")
-    class CleanImagesTable()
+    class CleanImagesTable
 }
 
 @KtorExperimentalLocationsAPI
@@ -38,7 +38,7 @@ fun Route.imageEndpoint() {
 
 
     authenticate(AUTHENTICATION_HEADER) {
-        val imagesRepository by inject<ImagesRepository>()
+        val imagesRepo by inject<ImagesRepo>()
 
 
         get<ImageIndex> {

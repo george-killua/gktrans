@@ -1,4 +1,4 @@
-package com.killua.features.vehiclemanager.car.info.dao
+package com.killua.features.vehiclemanager.car.info.dao.data
 
 import com.killua.features.company.data.dao.CompanyEntity
 import com.killua.features.company.data.dao.CompanyTable

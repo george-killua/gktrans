@@ -7,11 +7,10 @@ fun ImageEntity.toImageDto() =
     ImageDto(
         id = id.value.toString(),
         imageUrl = imageUri,
-        createdBy = createdBy.fullName(),
+        createdBy = createdBy.id.value.toString(),
         createdAt = createdDate.millis,
-        updatedBy = updatedBy?.fullName(),
+        updatedBy = updatedBy?.id?.value.toString(),
         updatedAt = updatedDate?.millis,
-        deletedBy = deletedBy?.fullName(),
+        deletedBy = deletedBy?.id?.value.toString(),
         deletedAt = updatedDate?.millis
-
     )

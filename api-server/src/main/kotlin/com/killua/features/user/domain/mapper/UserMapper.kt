@@ -5,6 +5,7 @@ import com.killua.features.user.data.dao.UserEntity
 import com.killua.features.user.data.dao.UserInfoEntity
 import com.killua.features.user.domain.model.UserDto
 import com.killua.features.user.domain.model.UserInfoDto
+import com.killua.features.user.domain.model.UserMentionDto
 
 fun UserEntity.toUserDto(): UserDto {
     return UserDto(
@@ -12,14 +13,22 @@ fun UserEntity.toUserDto(): UserDto {
         password = password,
         email = email,
         userType = userType,
-        pictureUrl = picture?.imageUri,
+        pictureUrl = picture.firstOrNull()?.imageUri,
         company = company?.toCompanyMentionDto(),
-        createdBy = createdBy.fullName(),
+        createdBy = createdBy.id.value.toString(),
         createdDate = createdDate.millis,
-        updatedBy = updatedBy?.fullName(),
+        updatedBy = updatedBy?.id?.value.toString(),
         updatedDate = updatedDate?.millis,
-        deletedBy = deletedBy?.fullName(),
+        deletedBy = deletedBy?.id?.value.toString(),
         deletedDate = deletedDate?.millis
+    )
+}
+
+fun UserEntity.toUserMentionDto(): UserMentionDto {
+    return UserMentionDto(
+        id = id.value.toString(),
+        email = email,
+        pictureUrl = picture.firstOrNull()?.imageUri,
     )
 }
 
@@ -35,10 +44,10 @@ fun UserInfoEntity.toUserInfo() = UserInfoDto(
     city = city ?: "",
     areaCode = areaCode ?: "",
     additionalInfo = additionalInfo ?: "",
-    createdBy = createdBy.fullName(),
+    createdBy = createdBy.id.value.toString(),
     createdDate = createdDate.millis,
-    updatedBy = updatedBy?.fullName(),
+    updatedBy = updatedBy?.id?.value.toString(),
     updatedDate = updatedDate?.millis,
-    deletedBy = deletedBy?.fullName(),
+    deletedBy = deletedBy?.id?.value.toString(),
     deletedDate = deletedDate?.millis
 )

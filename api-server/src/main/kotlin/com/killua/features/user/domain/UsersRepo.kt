@@ -5,7 +5,7 @@ import com.killua.features.user.domain.model.UserDto
 import com.killua.features.user.domain.model.UserInfoDto
 import com.killua.features.user.domain.model.UserType
 
-interface UserRepository {
+interface UsersRepo {
 
     suspend fun getAllUsers(companyId: String): List<UserDto>
     suspend fun getAllUsers(): List<UserDto>
@@ -17,7 +17,7 @@ interface UserRepository {
     suspend fun updateUserEmail(userId: String, email: String, currentUser: UserEntity): UserDto?
     suspend fun updateUserPassword(userId: String, password: String, currentUser: UserEntity): UserDto?
     suspend fun updateUserType(userId: String, userType: UserType, currentUser: UserEntity): UserDto?
-    suspend fun updateUserInfo(userId: String,user: UserInfoDto, currentUser: UserEntity): UserInfoDto?
+    suspend fun updateUserInfo(userId: String, user: UserInfoDto, currentUser: UserEntity): UserInfoDto?
     suspend fun deleteUser(userId: String, currentUser: UserEntity)
     suspend fun deleteUserInfo(userId: String, currentUser: UserEntity)
     suspend fun cleanUsersTable(): Int

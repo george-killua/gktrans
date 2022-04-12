@@ -7,6 +7,7 @@ import com.killua.features.vehiclemanager.accident.domain.model.AccidentDto
 import com.killua.features.vehiclemanager.car.info.domain.model.CarInsuranceDto
 import com.killua.features.vehiclemanager.usedhistory.domain.model.UsedHistoryDto
 
+@kotlinx.serialization.Serializable
 data class CarDto(
     val id: String? = null,
     val owner: UserDto? = null,
@@ -21,5 +22,6 @@ data class CarDto(
     val currentDriver: UserDto? = null,
     val usedHistories: List<UsedHistoryDto> = emptyList(),
     val accidents: List<AccidentDto> = emptyList(),
-    val images: List<ImageDto> = emptyList()
-    )
+    val images: List<ImageDto> = emptyList(),
+)
+

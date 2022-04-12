@@ -6,24 +6,28 @@ import com.killua.features.vehiclemanager.car.data.dao.CarEntity
 import com.killua.features.vehiclemanager.car.domain.model.CarDto
 import java.util.*
 
-class CarsLocalDataSourceImpl : CarsLocalDataSource {
+class CarsLdsImpl : CarsLds {
     override suspend fun addCar(carDto: CarDto): CarEntity {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getCarsWithOwner(owner: UserDto): List<CarEntity> {
+    override suspend fun getCompanyCars(owner: UserDto): List<CarEntity> {
         TODO("Not yet implemented")
     }
 
-    override fun getCar(carId: UUID): CarEntity? {
+    override suspend fun getCar(carId: UUID): CarEntity? {
         TODO("Not yet implemented")
     }
 
-    override fun updateCar(carDto: CarDto): CarEntity {
+    override suspend fun updateCar(carDto: CarDto): CarEntity {
         TODO("Not yet implemented")
     }
 
-    override fun updateDriver(driver: UserDto): CarEntity {
+    override suspend fun addDriver(user: UserDto, carId: String): CarEntity {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun updateDriver(driver: UserDto): CarEntity {
         TODO("Not yet implemented")
     }
 
@@ -31,15 +35,9 @@ class CarsLocalDataSourceImpl : CarsLocalDataSource {
         TODO("Not yet implemented")
     }
 
-    override fun getAccidentsOfCar(carDto: CarDto): List<AccidentEntity> {
+    override suspend fun getAccidentsOfCar(carId: UUID): List<AccidentEntity> {
         TODO("Not yet implemented")
     }
 
-    override fun getAccident(userId: String, accidentId: String): AccidentEntity {
-        TODO("Not yet implemented")
-    }
 
-    override suspend fun addDriver(user: UserDto, carId: String): CarEntity {
-        TODO("Not yet implemented")
-    }
 }

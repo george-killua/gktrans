@@ -3,9 +3,10 @@ package com.killua.features.vehiclemanager.car.info.domain.model
 import com.killua.features.company.domain.model.CompanyMentionDto
 import com.killua.features.vehiclemanager.car.domain.model.CarDto
 
+@kotlinx.serialization.Serializable
 data class CarInsuranceDto(
     val cars: List<CarDto>? = null,
-    val company:CompanyMentionDto,
+    val company: CompanyMentionDto,
     var policyholderName: String? = null,
     var policyholderAddress: String? = null,
     var policyholderNumber: String? = null,

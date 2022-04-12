@@ -1,5 +1,8 @@
 package com.killua.features.vehiclemanager.accident.data.dao
 
+import com.killua.config.Names.ACCIDENT_TABLE
+import com.killua.config.Names.COMPANY_COLUMN
+import com.killua.config.Names.DESCRIPTION_COLUMN
 import com.killua.features.company.data.dao.CompanyEntity
 import com.killua.features.company.data.dao.CompanyTable
 import com.killua.features.image.data.dao.ImageEntity
@@ -18,14 +21,14 @@ class AccidentEntity(id: EntityID<UUID>) : CommonEntity(id, AccidentTable) {
     companion object : UUIDEntityClass<AccidentEntity>(AccidentTable)
 
     var drivers by UserEntity via UsersAccidentsTable
-    val cars by CarEntity via CarsAccidentsTable
+    var cars by CarEntity via CarsAccidentsTable
     val accidentImage by ImageEntity optionalReferrersOn ImagesTable.accident
     var accidentDescription by AccidentTable.accidentDescription
     var company by CompanyEntity referencedOn AccidentTable.company
 }
 
-object AccidentTable : CommonTable("accidents") {
-    val accidentDescription = text("description").nullable()
-    val company = reference("company", CompanyTable)
+object AccidentTable : CommonTable(ACCIDENT_TABLE) {
+    val accidentDescription = text(DESCRIPTION_COLUMN).nullable()
+    val company = reference(COMPANY_COLUMN, CompanyTable)
 }
 

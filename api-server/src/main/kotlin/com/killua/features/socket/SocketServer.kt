@@ -1,10 +1,8 @@
 package com.killua.features.socket
 
 import com.killua.features.user.domain.model.UserDto
-import io.ktor.http.cio.websocket.WebSocketSession
 import com.killua.logger.ApiLogger
-import server.socket.SocketHolder
-
+import io.ktor.http.cio.websocket.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -34,13 +32,13 @@ class SocketServer(
 
     suspend fun sendUpdateToUser(user: UserDto, sessionId: String?) {
         apiLogger.log("Socket Server", "listeners $listeners")
-       // val notes = notesStorage.getNotes(user)
+        // val notes = notesStorage.getNotes(user)
         listeners[user]?.forEach { holder ->
             if (holder.sessionId != sessionId) {
                 //apiLogger.log("Socket Server", "user $user, sessionId ${holder.sessionId}, notes $notes")
                 try {
-                   // val json = Json.encodeToString(ListSerializer(NoteSchema.serializer()), notes)
-                //    holder.socketSession.send(Frame.Text(json))
+                    // val json = Json.encodeToString(ListSerializer(NoteSchema.serializer()), notes)
+                    //    holder.socketSession.send(Frame.Text(json))
                 } catch (e: Throwable) {
                     apiLogger.log("Socket Server", "sendUpdateToUserDto error $e")
                 }

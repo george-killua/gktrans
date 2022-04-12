@@ -2,7 +2,7 @@ package com.killua.features.vehiclemanager.car.info.domain.mapper
 
 import com.killua.features.company.domain.mapper.toCompanyMentionDto
 import com.killua.features.vehiclemanager.car.domain.mapper.toCarDto
-import com.killua.features.vehiclemanager.car.info.dao.CarInsuranceEntity
+import com.killua.features.vehiclemanager.car.info.dao.data.CarInsuranceEntity
 import com.killua.features.vehiclemanager.car.info.domain.model.CarInsuranceDto
 
 

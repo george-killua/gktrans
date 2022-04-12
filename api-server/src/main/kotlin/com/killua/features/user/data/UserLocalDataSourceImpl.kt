@@ -7,11 +7,10 @@ import com.killua.features.user.data.dao.UserTable
 import com.killua.features.user.domain.model.UserDto
 import com.killua.features.user.domain.model.UserInfoDto
 import com.killua.features.user.domain.model.UserType
-import org.jetbrains.exposed.sql.and
 import java.util.*
 
 
-class UserLocalDataSourceImpl() : UserLocalDataSource {
+class UserLocalDataSourceImpl : UserLocalDataSource {
     override suspend fun getAllUsers(companyId: UUID): List<UserEntity> {
         return UserEntity.find { UserTable.company eq companyId }.toList().ifEmpty { emptyList() }
     }
@@ -29,7 +28,11 @@ class UserLocalDataSourceImpl() : UserLocalDataSource {
     }
 
     override suspend fun getUserLoginCredential(email: String, password: String): UserEntity? {
-        return UserEntity.find { UserTable.email eq email and (UserTable.password eq password) }.firstOrNull()
+        return UserEntity.find { UserTable.email eq email }.firstOrNull()
+    }
+
+    override fun getUserLoginCredentiale(email: String, password: String): UserEntity? {
+        return UserEntity.find { UserTable.email eq email }.firstOrNull()
     }
 
     override suspend fun addUser(user: UserDto, currentUser: UserEntity): UserEntity {
@@ -39,6 +42,15 @@ class UserLocalDataSourceImpl() : UserLocalDataSource {
             this.password = user.password.encoded()
             this.company = currentUser.company
             create(currentUser)
+        }
+    }
+
+    override  fun addUserTest(user: UserDto): UserEntity {
+        return UserEntity.new {
+            this.email = user.email
+            this.userType = user.userType
+            this.password = user.password.encoded()
+            create(this)
         }
     }
 

@@ -8,8 +8,8 @@ import com.killua.features.user.data.dao.UserEntity
 import com.killua.features.user.data.dao.UserTable
 import com.killua.features.vehiclemanager.accident.data.dao.AccidentEntity
 import com.killua.features.vehiclemanager.car.domain.model.FuelType
-import com.killua.features.vehiclemanager.car.info.dao.CarInsuranceEntity
-import com.killua.features.vehiclemanager.car.info.dao.CarInsuranceTable
+import com.killua.features.vehiclemanager.car.info.dao.data.CarInsuranceEntity
+import com.killua.features.vehiclemanager.car.info.dao.data.CarInsuranceTable
 import com.killua.features.vehiclemanager.commondao.CarsAccidentsTable
 import com.killua.features.vehiclemanager.commondao.CommonEntity
 import com.killua.features.vehiclemanager.commondao.CommonTable
