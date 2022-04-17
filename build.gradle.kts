@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.6.20"
+    id("org.jetbrains.kotlin.jvm") version "1.6.20"
     id("org.jetbrains.kotlin.plugin.serialization") version "1.6.20"
 
 }
@@ -13,6 +13,7 @@ repositories {
 
 group = "com.killua"
 version = "0.0.1"
+
 
 subprojects {
     group = rootProject.group

@@ -6,17 +6,18 @@ import com.killua.features.user.data.dao.UserTable
 import org.jetbrains.exposed.dao.*
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.UUIDTable
+import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.jodatime.CurrentDateTime
 import org.jetbrains.exposed.sql.jodatime.datetime
 import org.joda.time.DateTime
 import java.util.*
 
 abstract class CommonTable(name: String) : UUIDTable(name) {
-    val createdBy = reference("created_by", UserTable)
+    val createdBy = reference("created_by", UserTable, onDelete = ReferenceOption.CASCADE)
     val createdDate = datetime("created_date").defaultExpression(CurrentDateTime())
-    val updatedBy = reference("updated_by", UserTable).nullable()
+    val updatedBy = reference("updated_by", UserTable, onDelete = ReferenceOption.CASCADE).nullable()
     val updatedDate = datetime("updated_date").nullable()
-    val deletedBy = reference("deleted_by", UserTable).nullable()
+    val deletedBy = reference("deleted_by", UserTable, onDelete = ReferenceOption.CASCADE).nullable()
     val deletedDate = datetime("deleted_date").nullable()
 }
 
@@ -42,7 +43,7 @@ abstract class CommonEntity(id: EntityID<UUID>, commonTable: CommonTable) : UUID
         } ?: 0
     }
 
-    fun softDelete(user: UserEntity) {
+    open fun softDelete(user: UserEntity) {
         deletedBy = user
         deletedDate = DateTime.now()
         this.flush()

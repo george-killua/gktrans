@@ -4,7 +4,6 @@ import com.killua.extenstions.toUuid
 import com.killua.features.company.data.dao.CompanyEntity
 import com.killua.features.company.domain.model.CompanyDto
 import com.killua.features.user.data.dao.UserEntity
-import com.killua.features.vehiclemanager.accident.data.AccidentsLds
 import com.killua.features.vehiclemanager.accident.data.dao.AccidentEntity
 import com.killua.features.vehiclemanager.car.data.dao.CarEntity
 import org.joda.time.DateTime
@@ -25,7 +24,8 @@ class CompaniesLDSImpl() : CompaniesLDS {
             create(currentUser)
         }
     }
-    override  fun addCompanye(company: CompanyDto, currentUser: UserEntity): CompanyEntity {
+
+    override fun addCompanye(company: CompanyDto, currentUser: UserEntity): CompanyEntity {
         return CompanyEntity.new {
             name = company.name
             createdBy = currentUser
@@ -59,11 +59,7 @@ class CompaniesLDSImpl() : CompaniesLDS {
             softDelete(currentUser)
             users.run { forEach { _ -> softDelete(currentUser) } }
             cars.run { forEach { _ -> softDelete(currentUser) } }
-            accidents.run {
-                forEach { accident ->
-                  //  accidentsLds.deleteAccident(accident.id.value, currentUser)
-                }
-            }
+            accidents.run { forEach { _ -> softDelete(currentUser) } }
         }
     }
 

@@ -11,6 +11,8 @@
     <logger name="io.netty" level="error"/>
     <logger name="com.zaxxer.hikari">
         <level value="error"/>
-        <level value="info"/>
+    </logger>
+    <logger name="Exposed" level="warn" additivity="false">
+        <appender-ref ref="STDOUT"/>
     </logger>
 </configuration>

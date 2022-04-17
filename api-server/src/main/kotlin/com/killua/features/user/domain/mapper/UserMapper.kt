@@ -6,14 +6,17 @@ import com.killua.features.user.data.dao.UserInfoEntity
 import com.killua.features.user.domain.model.UserDto
 import com.killua.features.user.domain.model.UserInfoDto
 import com.killua.features.user.domain.model.UserMentionDto
+import io.ktor.util.*
+import org.jetbrains.exposed.sql.exists
 
 fun UserEntity.toUserDto(): UserDto {
+    val urled =if(picture!=null)picture.firstOrNull()?.imageUri else ""
     return UserDto(
         id = id.value.toString(),
         password = password,
         email = email,
         userType = userType,
-        pictureUrl = picture.firstOrNull()?.imageUri,
+        pictureUrl = urled  ,
         company = company?.toCompanyMentionDto(),
         createdBy = createdBy.id.value.toString(),
         createdDate = createdDate.millis,

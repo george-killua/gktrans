@@ -1,31 +1,34 @@
 package com.killua
 
 import com.killua.config.AppConfig
+import com.killua.di.FeaturesModule
 import com.killua.di.applicationModule
-import com.killua.di.featuresModule
 import com.killua.extenstions.DatabaseExt
 import com.killua.plugins.*
-import io.ktor.application.*
-import io.ktor.locations.*
-import io.ktor.server.engine.*
+import io.ktor.server.application.*
+import org.koin.core.context.startKoin
 import org.koin.core.module.Module
+import org.koin.java.KoinJavaComponent.inject
 import org.koin.ktor.ext.Koin
-import org.koin.ktor.ext.inject
 
 
 fun main(args: Array<String>): Unit =
     io.ktor.server.netty.EngineMain.main(args)
 
-@OptIn(KtorExperimentalLocationsAPI::class)
 
 @Suppress("unused") // application.conf references the main function. This annotation prevents the IDE from marking it as unused.
 fun Application.module(
     koinModules: List<Module> = listOf(
         applicationModule,
-        featuresModule
+        FeaturesModule.accidentModule,
+        FeaturesModule.carModule,
+        FeaturesModule.companyModule,
+        FeaturesModule.imageModule,
+        FeaturesModule.userModule
+
     ),
 ) {
-    install(Koin) {
+    install(KoinPlugin) {
         modules(koinModules)
     }
     setupConfiguration()
@@ -38,10 +41,5 @@ fun Application.module(
     configureTemplating()
     configureMonitoring()
 
-    install(ShutDownUrl.ApplicationCallFeature) {
-        // The URL that will be intercepted
-        shutDownUrl = "/ktor/application/shutdown"
-        // A function that will be executed to get the exit code of the process
-        exitCodeSupplier = { 0 }
-    }
+
 }

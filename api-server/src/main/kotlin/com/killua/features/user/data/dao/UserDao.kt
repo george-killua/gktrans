@@ -18,16 +18,12 @@ import com.killua.features.company.data.dao.CompanyTable
 import com.killua.features.image.data.dao.ImageEntity
 import com.killua.features.image.data.dao.ImagesTable
 import com.killua.features.user.domain.model.UserType
-import com.killua.features.vehiclemanager.accident.data.dao.AccidentEntity
-import com.killua.features.vehiclemanager.car.data.dao.CarEntity
-import com.killua.features.vehiclemanager.car.data.dao.CarTable
-import com.killua.features.vehiclemanager.commondao.UserCarsTable
-import com.killua.features.vehiclemanager.commondao.UsersAccidentsTable
-import io.ktor.auth.*
+import io.ktor.server.auth.*
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.UUIDTable
+import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.jodatime.CurrentDateTime
 import org.jetbrains.exposed.sql.jodatime.datetime
 import org.joda.time.DateTime
@@ -36,13 +32,14 @@ import java.util.*
 class UserEntity(id: EntityID<UUID>) : UUIDEntity(id), Principal {
     companion object : UUIDEntityClass<UserEntity>(UserTable)
 
-    val picture by ImageEntity optionalReferrersOn  ImagesTable.user
+    val picture by ImageEntity optionalReferrersOn ImagesTable.user
     var userType by UserTable.userType
     var email by UserTable.email
     var password by UserTable.password
-/*    val myCurrentCar by CarEntity optionalReferrersOn  CarTable.currentDriver
-    val drivenCar by CarEntity referrersOn UserCarsTable.car
-    val accidents by AccidentEntity referrersOn UsersAccidentsTable.accident*/
+
+    /*    val myCurrentCar by CarEntity optionalReferrersOn  CarTable.currentDriver
+        val drivenCar by CarEntity referrersOn UserCarsTable.car
+        val accidents by AccidentEntity referrersOn UsersAccidentsTable.accident*/
     var userInfo by UserInfoEntity optionalReferencedOn UserTable.userInfo
     var company by CompanyEntity optionalReferencedOn UserTable.company
     var createdBy by UserEntity referencedOn UserTable.createdBy
@@ -95,12 +92,12 @@ class UserEntity(id: EntityID<UUID>) : UUIDEntity(id), Principal {
 
 
 object UserTable : UUIDTable(USER_TABLE) {
-    val userInfo = reference(USER_INFO_COLUMN, UserInfosTable).nullable()
+    val userInfo = reference(USER_INFO_COLUMN, UserInfosTable, onDelete = ReferenceOption.CASCADE).nullable()
     val userType = enumerationByName(USER_TYPE_COLUMN, 8, UserType::class)
     val password = text(PASSWORD_COLUMN).default("")
     val email = text(EMAIL_ADDRESS_COLUMN).default("")
-    val company = reference(COMPANY_COLUMN, CompanyTable).nullable()
-    val createdBy = reference(CREATED_BY_COLUMN, UserTable)
+    val company = reference(COMPANY_COLUMN, CompanyTable, onDelete = ReferenceOption.SET_NULL).nullable()
+    val createdBy = reference(CREATED_BY_COLUMN, UserTable, onDelete = ReferenceOption.CASCADE)
     val createdDate = datetime(CREATED_DATE_COLUMN).defaultExpression(CurrentDateTime())
     val updatedBy = reference(UPDATED_BY_COLUMN, UserTable).nullable()
     val updatedDate = datetime(UPDATED_DATE_COLUMN).nullable()

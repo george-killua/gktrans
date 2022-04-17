@@ -64,7 +64,7 @@ object DatabaseExt {
             )
         Database.connect(dataSource)
         transaction {
-            SchemaUtils.create(
+            SchemaUtils.createMissingTablesAndColumns(
                 tables =
                 arrayOf(
                     UserTable,

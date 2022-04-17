@@ -1,18 +1,22 @@
 package com.killua.features.company.data
 
 
-import com.killua.di.applicationModule
-import com.killua.di.featuresModule
-import com.killua.extenstions.DatabaseExt
+import com.killua.TestStaticNames.CompanySettings.COMPANY_ID
+import com.killua.TestStaticNames.User.E_MAIL
+import com.killua.TestStaticNames.User.PASSWORD
+import com.killua.di.FeaturesModule
+import com.killua.extenstions.*
 import com.killua.extenstions.DatabaseExt.dbTransaction
 import com.killua.features.company.data.dao.CompanyEntity
 import com.killua.features.company.domain.model.CompanyDto
-import com.killua.features.user.data.UserLocalDataSource
-import com.killua.features.user.data.UserLocalDataSourceImpl
+import com.killua.features.user.data.UserLds
+import com.killua.features.user.data.dao.UserEntity
 import com.killua.features.user.domain.model.UserDto
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.`should equal`
 import org.junit.jupiter.api.AfterEach
@@ -24,22 +28,35 @@ import org.koin.test.KoinTest
 import org.koin.test.inject
 
 
+@ExperimentalCoroutinesApi
 class CompaniesLDSImplTest() : KoinTest {
 
 
-    private val email = "george@kass.com"
-    private val password = "ForgeRock"
-    private val currentUser = UserDto(email = email, password = password)
-    private val userLDS: UserLocalDataSource = UserLocalDataSourceImpl()
+    private lateinit var userAsynchronously: Deferred<UserEntity>
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val testDispatcher: CoroutineDispatcher = StandardTestDispatcher()
+    private val userLDS: UserLds by inject()
     private val companiesLDS: CompaniesLDS by inject()
 
     @BeforeEach
     fun setUp() {
         startKoin {
-            modules(featuresModule, applicationModule)
+            modules(FeaturesModule.companyModule, FeaturesModule.userModule)
         }
         DatabaseExt.connectTesting()
+        runTest {
+             userAsynchronously = dbTransaction(Dispatchers.Unconfined) {
+                val email = E_MAIL
+                val password = PASSWORD
+                return@dbTransaction when (val x = userLDS.getUserLoginCredential(email, password)) {
+                    is DbResult.FoundThings -> x.result
+                    is DbResult.NothingsFound -> userLDS.addUserTest(UserDto(email = email, password = password))
+                        .checkResult(UserNotFoundException())
+                }
+            }
+
+        }
     }
 
     @AfterEach
@@ -58,10 +75,7 @@ class CompaniesLDSImplTest() : KoinTest {
         //Given
         val companyName = "lewdness"
 
-        val userAsynchronously = dbTransaction(Dispatchers.Unconfined) {
-            (userLDS.getUserLoginCredentiale(email, password)
-                ?: userLDS.addUserTest(currentUser))
-        }
+
         println("im Here between ${userAsynchronously.isActive}")
 
         val company: CompanyEntity = userAsynchronously.await().run {
@@ -70,23 +84,20 @@ class CompaniesLDSImplTest() : KoinTest {
                     CompanyDto(name = companyName), this
                 )
             }.await().apply {
-
                 println(this.toString())
-
                 println("im Here")
-
             }
-
         }
-
-
-// Then
+        // Then
         companyName `should equal` company.name
     }
 
 
     @Test
-    fun getUsers() {
+    fun getUsersWithCompanyId() = runTest {
+        val users = dbTransaction(testDispatcher) {
+            companiesLDS.getUsers(COMPANY_ID.toUuid())
+        }
     }
 
     @Test
@@ -111,7 +122,6 @@ class CompaniesLDSImplTest() : KoinTest {
 
     @Test
     fun cleanCompanyTable() {
-        runBlockingTest(context = Dispatchers.IO) {}
     }
 }
 

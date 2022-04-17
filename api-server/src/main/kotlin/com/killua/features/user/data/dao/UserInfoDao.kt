@@ -19,7 +19,6 @@ import java.util.*
 
 class UserInfoEntity(id: EntityID<UUID>) : CommonEntity(id, UserInfosTable) {
     companion object : UUIDEntityClass<UserInfoEntity>(UserInfosTable)
-
     var firstname by UserInfosTable.firstname
     var lastname by UserInfosTable.lastname
     var phoneNumber by UserInfosTable.phoneNumber

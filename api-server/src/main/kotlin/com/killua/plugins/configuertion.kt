@@ -2,9 +2,10 @@ package com.killua.plugins
 
 import com.killua.config.AppConfig
 import com.killua.config.DatabaseConfig
+import com.killua.inject
 import com.typesafe.config.ConfigFactory
-import io.ktor.application.*
-import io.ktor.config.*
+import io.ktor.server.application.*
+import io.ktor.server.config.*
 import org.koin.ktor.ext.inject
 
 fun Application.setupConfiguration() {

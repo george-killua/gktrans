@@ -3,6 +3,12 @@ import Dependencies.Ktor
 import Dependencies.Logging
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+repositories {
+    maven {
+        url = uri("https://maven.pkg.jetbrains.space/public/p/ktor/eap")
+        name = "ktor-eap"
+    }
+}
 plugins {
     application
     id("com.github.johnrengelman.shadow") version "5.2.0"
@@ -31,6 +37,8 @@ dependencies {
 
     implementation(Ktor.htmlBuilder)
     implementation("org.junit.jupiter:junit-jupiter:5.8.2")
+    implementation("io.ktor:ktor-server-call-logging:2.0.0")
+    implementation("io.ktor:ktor-server-content-negotiation:2.0.0")
     testImplementation(Ktor.cssJvm)
     implementation(Ktor.micrometer)
     implementation(Ktor.prometheus)
@@ -39,7 +47,7 @@ dependencies {
     implementation(Ktor.serverTests)
 
     implementation(Logging.logback)
-    implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.5")
 
     //database implementation
     implementation(Database.exposedCore)
@@ -68,7 +76,7 @@ tasks {
 tasks {
 
     withType<KotlinCompile>().all {
-        kotlinOptions.freeCompilerArgs += "-Xopt-in=io.ktor.util.KtorExperimentalAPI"
+        kotlinOptions.freeCompilerArgs += "-opt-in=io.ktor.util.KtorExperimentalAPI"
     }
 }
 tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {

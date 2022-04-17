@@ -7,16 +7,17 @@ import com.killua.features.user.data.dao.UserEntity
 import com.killua.features.user.domain.mapper.toUserDto
 import com.killua.features.user.domain.model.UserDto
 import com.killua.features.user.domain.model.UserType
-
-import de.nycode.bcrypt.hash
-import io.ktor.application.*
-import io.ktor.auth.*
+import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.http.*
-import io.ktor.response.*
-import io.ktor.sessions.*
+import io.ktor.server.response.*
+import io.ktor.server.sessions.*
 import io.ktor.util.*
 import io.ktor.util.pipeline.*
+import java.security.Key
 import java.util.*
+import javax.crypto.Cipher
+import javax.crypto.spec.SecretKeySpec
 
 
 fun ApplicationCall.getAuthorizationTokenWithoutBearer(): String? {
@@ -51,15 +52,45 @@ data class DefaultResponse(
 
 interface Payload
 
+private const val ALGO = "AES"
+private val keyValue = "0123456789abcdef".toByteArray()
 
 @OptIn(InternalAPI::class)
-fun String.encoded(): String {
-    return hash(this).encodeBase64()
+fun String.encoded(): String? {
+    val encodedPwd: String?
+    try {
+        val key: Key = generateKey()
+        val c = Cipher.getInstance(ALGO)
+        c.init(Cipher.ENCRYPT_MODE, key)
+        val encVal = c.doFinal(this.toByteArray())
+        encodedPwd = Base64.getEncoder().encodeToString(encVal)
+        return encodedPwd
+    } catch (e: Exception) {
+        e.printStackTrace()
+
+    }
+    return null
+}
+
+
+private fun generateKey(): Key {
+    return SecretKeySpec(keyValue, ALGO)
 }
 
 @OptIn(InternalAPI::class)
-fun String.verify(s: String, decodeBase64Bytes: ByteArray): Boolean {
-    return verify(s, this.decodeBase64Bytes())
+fun String.verify(s: String): Boolean {
+    val decodedPWD =
+        try {
+            val key: Key = generateKey()
+            val c = Cipher.getInstance(ALGO)
+            c.init(Cipher.DECRYPT_MODE, key)
+            val decodedValue = Base64.getDecoder().decode(this)
+            val decValue = c.doFinal(decodedValue)
+            String(decValue)
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    return decodedPWD == s
 }
 
 private suspend inline fun PipelineContext<*, ApplicationCall>.requireUser(block: (userId: UserDto) -> Unit) {

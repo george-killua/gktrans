@@ -2,8 +2,9 @@ package com.killua.features.socket
 
 import com.killua.extenstions.getSessionId
 import com.killua.features.user.domain.model.UserDto
+import com.killua.inject
 import com.killua.logger.ApiLogger
-import io.ktor.application.*
+import io.ktor.server.application.*
 import kotlinx.coroutines.launch
 import org.koin.ktor.ext.inject
 

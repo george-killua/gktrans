@@ -3,14 +3,14 @@
 package com.killua.features.image.resource
 
 import com.killua.features.image.domain.ImagesRepo
+import com.killua.inject
 import com.killua.plugins.AUTHENTICATION_HEADER
-import io.ktor.application.*
-import io.ktor.auth.*
-import io.ktor.locations.*
-import io.ktor.locations.post
-import io.ktor.response.*
-import io.ktor.routing.*
-import org.koin.ktor.ext.inject
+import io.ktor.server.application.*
+import io.ktor.server.auth.*
+import io.ktor.server.locations.*
+import io.ktor.server.locations.post
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 
 @Location("/image")
 class ImageIndex {

@@ -1,11 +1,11 @@
 package com.killua.plugins
 
 import com.killua.features.socket.UserSession
-import io.ktor.application.*
-import io.ktor.http.cio.websocket.*
-import io.ktor.sessions.*
+import io.ktor.server.application.*
+import io.ktor.server.application.ApplicationCallPipeline.ApplicationPhase.Plugins
+import io.ktor.server.sessions.*
+import io.ktor.server.websocket.*
 import io.ktor.util.*
-import io.ktor.websocket.*
 import java.time.Duration
 
 fun Application.configureSockets() {
@@ -21,7 +21,7 @@ fun Application.configureSockets() {
         }
     }
 
-    intercept(ApplicationCallPipeline.Features) {
+    intercept(Plugins) {
         if (call.sessions.get<UserSession>() == null) {
             val id = generateNonce()
             call.sessions.set(UserSession(id))

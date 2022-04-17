@@ -1,7 +1,10 @@
 package com.killua.features.user.domain
 
+import com.killua.extenstions.DatabaseExt.dbTransaction
+import com.killua.extenstions.UserNotFoundException
+import com.killua.extenstions.checkResult
 import com.killua.extenstions.toUuid
-import com.killua.features.user.data.UserLocalDataSource
+import com.killua.features.user.data.UserLds
 import com.killua.features.user.data.dao.UserEntity
 import com.killua.features.user.domain.mapper.toUserDto
 import com.killua.features.user.domain.mapper.toUserInfo
@@ -10,64 +13,81 @@ import com.killua.features.user.domain.model.UserInfoDto
 import com.killua.features.user.domain.model.UserType
 import kotlinx.coroutines.CoroutineDispatcher
 
-class UserRepoImpl(private val userLds: UserLocalDataSource, private val dispatcher: CoroutineDispatcher) : UsersRepo {
+class UserRepoImpl(private val userLds: UserLds, private val dispatcher: CoroutineDispatcher) : UsersRepo {
     override suspend fun getAllUsers(companyId: String): List<UserDto> {
-        return userLds.getAllUsers(companyId.toUuid()).map { it.toUserDto() }
+        return dbTransaction(dispatcher) {
+            userLds.getAllUsers(companyId.toUuid())
+                .checkResult(UserNotFoundException("there is no users in this company")).map { it.toUserDto() }
+        }.await()
     }
 
     override suspend fun getAllUsers(): List<UserDto> {
-        return userLds.getAllUsers().map { it.toUserDto() }
+        return dbTransaction(dispatcher) {
+            userLds.getAllUsers().checkResult(UserNotFoundException()).map { it.toUserDto() }
+        }.await()
     }
 
-    override suspend fun getUser(userId: String): UserDto? {
-        return userLds.getUser(userId.toUuid())?.toUserDto()
+    override suspend fun getUser(userId: String): UserDto {
+        return dbTransaction(dispatcher) { userLds.getUser(userId.toUuid()).checkResult(UserNotFoundException()).toUserDto() }.await()
     }
 
     override suspend fun getUserInfo(userId: String): UserInfoDto? {
-        return userLds.getUser(userId.toUuid())?.userInfo?.toUserInfo()
+        return dbTransaction(dispatcher) {
+            userLds.getUser(userId.toUuid()).checkResult(UserNotFoundException()).userInfo?.toUserInfo()
+        }.await()
     }
 
     override suspend fun getUserLoginCredential(email: String, password: String): UserEntity? {
-        return getUserLoginCredential(email, password)
+        return dbTransaction(dispatcher) { getUserLoginCredential(email, password) }.await()
     }
 
     override suspend fun addUser(user: UserDto, currentUser: UserEntity): UserDto {
-        return userLds.addUser(user, currentUser).toUserDto()
+        return dbTransaction(dispatcher) { userLds.addUser(user, currentUser).checkResult(UserNotFoundException()).toUserDto() }.await()
     }
 
     override suspend fun addUserInfo(userID: String, userInfo: UserInfoDto, currentUser: UserEntity): UserInfoDto? {
-        return userLds.addUserInfo(userID.toUuid(), userInfo, currentUser)?.toUserInfo()
+        return dbTransaction(dispatcher) {
+            userLds.addUserInfo(userID.toUuid(), userInfo, currentUser).checkResult(UserNotFoundException()).toUserInfo()
+        }.await()
     }
 
     override suspend fun updateUserEmail(userId: String, email: String, currentUser: UserEntity): UserDto? {
-        return userLds.updateUserEmail(userId.toUuid(), email, currentUser)?.toUserDto()
+        return dbTransaction(dispatcher) {
+            userLds.updateUserEmail(userId.toUuid(), email, currentUser).checkResult(UserNotFoundException()).toUserDto()
+        }.await()
     }
 
     override suspend fun updateUserPassword(userId: String, password: String, currentUser: UserEntity): UserDto? {
-        return userLds.updateUserPassword(userId.toUuid(), password, currentUser)?.toUserDto()
+        return dbTransaction(dispatcher) {
+            userLds.updateUserPassword(userId.toUuid(), password, currentUser).checkResult(UserNotFoundException()).toUserDto()
+        }.await()
     }
 
     override suspend fun updateUserType(userId: String, userType: UserType, currentUser: UserEntity): UserDto? {
-        return userLds.updateUserType(userId.toUuid(), userType, currentUser)?.toUserDto()
+        return dbTransaction(dispatcher) {
+            userLds.updateUserType(userId.toUuid(), userType, currentUser).checkResult(UserNotFoundException()).toUserDto()
+        }.await()
     }
 
     override suspend fun updateUserInfo(userId: String, user: UserInfoDto, currentUser: UserEntity): UserInfoDto? {
-        return userLds.updateUserInfo(userId.toUuid(), user, currentUser)?.toUserInfo()
+        return dbTransaction(dispatcher) {
+            userLds.updateUserInfo(userId.toUuid(), user, currentUser).checkResult(UserNotFoundException()).toUserInfo()
+        }.await()
     }
 
     override suspend fun deleteUser(userId: String, currentUser: UserEntity) {
-        return userLds.deleteUser(userId.toUuid(), currentUser)
+        return dbTransaction(dispatcher) { userLds.deleteUser(userId.toUuid(), currentUser).checkResult(UserNotFoundException()) }.await()
     }
 
     override suspend fun deleteUserInfo(userId: String, currentUser: UserEntity) {
-        return userLds.deleteUserInfo(userId.toUuid(), currentUser)
+        return dbTransaction(dispatcher) { userLds.deleteUserInfo(userId.toUuid(), currentUser).checkResult(UserNotFoundException()) }.await()
     }
 
     override suspend fun cleanUsersTable(): Int {
-        return userLds.cleanUsersTable()
+        return dbTransaction(dispatcher) { userLds.cleanUsersTable().checkResult(UserNotFoundException()) }.await()
     }
 
     override suspend fun cleanUserInfoTable(): Int {
-        return userLds.cleanUserInfoTable()
+        return dbTransaction(dispatcher) { userLds.cleanUserInfoTable().checkResult(UserNotFoundException()) }.await()
     }
 }

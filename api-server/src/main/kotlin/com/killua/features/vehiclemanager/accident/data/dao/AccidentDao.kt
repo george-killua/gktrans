@@ -25,6 +25,11 @@ class AccidentEntity(id: EntityID<UUID>) : CommonEntity(id, AccidentTable) {
     val accidentImage by ImageEntity optionalReferrersOn ImagesTable.accident
     var accidentDescription by AccidentTable.accidentDescription
     var company by CompanyEntity referencedOn AccidentTable.company
+    override fun softDelete(user: UserEntity) {
+        cars.mapNotNull { it.company }.filter { it != this.company }.ifEmpty {
+            softDelete(user)
+        }
+    }
 }
 
 object AccidentTable : CommonTable(ACCIDENT_TABLE) {

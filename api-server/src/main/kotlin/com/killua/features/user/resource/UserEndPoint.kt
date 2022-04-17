@@ -4,11 +4,12 @@ package com.killua.features.user.resource
 
 import com.killua.features.user.domain.UsersRepo
 import com.killua.features.user.domain.model.UserInfoDto
-import io.ktor.application.*
-import io.ktor.locations.*
-import io.ktor.locations.post
-import io.ktor.response.*
-import io.ktor.routing.*
+import com.killua.inject
+import io.ktor.server.application.*
+import io.ktor.server.locations.*
+import io.ktor.server.locations.post
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import org.koin.ktor.ext.inject
 
 //
