@@ -11,8 +11,8 @@ import com.killua.config.Names.SEX_COLUMN
 import com.killua.config.Names.STREET_COLUMN
 import com.killua.config.Names.STREET_NUMBER_COLUMN
 import com.killua.config.Names.USER_INFO_TABLE
-import com.killua.features.vehiclemanager.commondao.CommonEntity
-import com.killua.features.vehiclemanager.commondao.CommonTable
+import com.killua.features.commondao.CommonEntity
+import com.killua.features.commondao.CommonTable
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import java.util.*

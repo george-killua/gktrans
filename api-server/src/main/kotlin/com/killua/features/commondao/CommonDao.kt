@@ -1,4 +1,4 @@
-package com.killua.features.vehiclemanager.commondao
+package com.killua.features.commondao
 
 import com.killua.extenstions.toUuid
 import com.killua.features.user.data.dao.UserEntity
@@ -13,11 +13,11 @@ import org.joda.time.DateTime
 import java.util.*
 
 abstract class CommonTable(name: String) : UUIDTable(name) {
-    val createdBy = reference("created_by", UserTable, onDelete = ReferenceOption.CASCADE)
+    val createdBy = reference("created_by", UserTable, onDelete = ReferenceOption.NO_ACTION)
     val createdDate = datetime("created_date").defaultExpression(CurrentDateTime())
-    val updatedBy = reference("updated_by", UserTable, onDelete = ReferenceOption.CASCADE).nullable()
+    val updatedBy = reference("updated_by", UserTable, onDelete = ReferenceOption.NO_ACTION).nullable()
     val updatedDate = datetime("updated_date").nullable()
-    val deletedBy = reference("deleted_by", UserTable, onDelete = ReferenceOption.CASCADE).nullable()
+    val deletedBy = reference("deleted_by", UserTable, onDelete = ReferenceOption.NO_ACTION).nullable()
     val deletedDate = datetime("deleted_date").nullable()
 }
 
@@ -31,7 +31,6 @@ abstract class CommonEntity(id: EntityID<UUID>, commonTable: CommonTable) : UUID
     fun softDelete(userID: String) {
         deletedBy = UserEntity.findById(userID.toUuid())
         deletedDate = DateTime.now()
-        this.flush()
     }
 
 
@@ -46,31 +45,26 @@ abstract class CommonEntity(id: EntityID<UUID>, commonTable: CommonTable) : UUID
     open fun softDelete(user: UserEntity) {
         deletedBy = user
         deletedDate = DateTime.now()
-        this.flush()
     }
 
     fun create(userID: String) {
         createdBy = UserEntity.findById(userID.toUuid())!!
         createdDate = DateTime.now()
-        this.flush()
     }
 
     fun create(user: UserEntity) {
         createdBy = user
         createdDate = DateTime.now()
-        this.flush()
     }
 
     fun update(userID: String) {
         updatedBy = UserEntity.findById(userID.toUuid())!!
         updatedDate = DateTime.now()
-        this.flush()
     }
 
     fun update(user: UserEntity) {
         updatedBy = user
         updatedDate = DateTime.now()
-        this.flush()
     }
 
 }

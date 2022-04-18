@@ -45,7 +45,8 @@ class UserLdsImpl(private val companyLds: CompaniesLDS) : UserLds {
     }
 
     override suspend fun getUserLoginCredential(email: String, password: String): DbResult<UserEntity> {
-        return UserEntity.find { UserTable.email eq email }
+        val encodidPassword: String = password.encoded()!!
+        return UserEntity.find { UserTable.email eq email or (UserTable.password eq encodidPassword) }
             .firstOrNull()
             .checkNullability()
     }

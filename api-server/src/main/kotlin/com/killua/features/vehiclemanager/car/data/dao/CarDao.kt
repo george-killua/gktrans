@@ -10,9 +10,9 @@ import com.killua.features.vehiclemanager.accident.data.dao.AccidentEntity
 import com.killua.features.vehiclemanager.car.domain.model.FuelType
 import com.killua.features.vehiclemanager.car.info.dao.data.CarInsuranceEntity
 import com.killua.features.vehiclemanager.car.info.dao.data.CarInsuranceTable
-import com.killua.features.vehiclemanager.commondao.CarsAccidentsTable
-import com.killua.features.vehiclemanager.commondao.CommonEntity
-import com.killua.features.vehiclemanager.commondao.CommonTable
+import com.killua.features.commondao.CarsAccidentsTable
+import com.killua.features.commondao.CommonEntity
+import com.killua.features.commondao.CommonTable
 import com.killua.features.vehiclemanager.usedhistory.data.dao.UsedHistoryEntity
 import com.killua.features.vehiclemanager.usedhistory.data.dao.UsedHistoryTable
 import org.jetbrains.exposed.dao.UUIDEntityClass

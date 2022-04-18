@@ -8,9 +8,9 @@ import com.killua.features.user.data.dao.UserTable
 import com.killua.features.vehiclemanager.accident.data.dao.AccidentTable
 import com.killua.features.vehiclemanager.car.data.dao.CarTable
 import com.killua.features.vehiclemanager.car.info.dao.data.CarInsuranceTable
-import com.killua.features.vehiclemanager.commondao.CarsAccidentsTable
-import com.killua.features.vehiclemanager.commondao.UserCarsTable
-import com.killua.features.vehiclemanager.commondao.UsersAccidentsTable
+import com.killua.features.commondao.CarsAccidentsTable
+import com.killua.features.commondao.UserCarsTable
+import com.killua.features.commondao.UsersAccidentsTable
 import com.killua.features.vehiclemanager.usedhistory.data.dao.UsedHistoryTable
 import com.killua.features.work.data.dao.HolidayTable
 import com.killua.features.work.data.dao.WorkDetailTable
@@ -122,11 +122,10 @@ object DatabaseExt {
     }
 
 
-    suspend fun <T> dbTransaction(dispatcher: CoroutineDispatcher,block: suspend () -> T): Deferred<T> {
-        return suspendedTransactionAsync(dispatcher) {
+    suspend fun <T> dbTransaction(dispatcher: CoroutineDispatcher,block: suspend () -> T): T {
+        return suspendedTransactionAsync(dispatcher ) {
             block()
-        }
-
+        }.await()
     }
 
 

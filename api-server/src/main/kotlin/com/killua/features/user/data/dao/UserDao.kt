@@ -92,15 +92,15 @@ class UserEntity(id: EntityID<UUID>) : UUIDEntity(id), Principal {
 
 
 object UserTable : UUIDTable(USER_TABLE) {
-    val userInfo = reference(USER_INFO_COLUMN, UserInfosTable, onDelete = ReferenceOption.CASCADE).nullable()
+    val userInfo = reference(USER_INFO_COLUMN, UserInfosTable, onDelete = ReferenceOption.SET_NULL).nullable()
     val userType = enumerationByName(USER_TYPE_COLUMN, 8, UserType::class)
     val password = text(PASSWORD_COLUMN).default("")
     val email = text(EMAIL_ADDRESS_COLUMN).default("")
-    val company = reference(COMPANY_COLUMN, CompanyTable, onDelete = ReferenceOption.SET_NULL).nullable()
-    val createdBy = reference(CREATED_BY_COLUMN, UserTable, onDelete = ReferenceOption.CASCADE)
+    val company = reference(COMPANY_COLUMN, CompanyTable, onDelete = ReferenceOption.CASCADE).nullable()
+    val createdBy = reference(CREATED_BY_COLUMN, UserTable, onDelete = ReferenceOption.SET_NULL)
     val createdDate = datetime(CREATED_DATE_COLUMN).defaultExpression(CurrentDateTime())
-    val updatedBy = reference(UPDATED_BY_COLUMN, UserTable).nullable()
+    val updatedBy = reference(UPDATED_BY_COLUMN, UserTable, onDelete = ReferenceOption.SET_NULL).nullable()
     val updatedDate = datetime(UPDATED_DATE_COLUMN).nullable()
-    val deletedBy = reference(DELETED_BY_COLUMN, UserTable).nullable()
+    val deletedBy = reference(DELETED_BY_COLUMN, UserTable, onDelete = ReferenceOption.SET_NULL).nullable()
     val deletedDate = datetime(DELETED_DATE_COLUMN).nullable()
 }

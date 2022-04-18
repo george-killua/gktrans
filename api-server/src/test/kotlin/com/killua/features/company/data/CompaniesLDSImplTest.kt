@@ -2,6 +2,7 @@ package com.killua.features.company.data
 
 
 import com.killua.TestStaticNames.CompanySettings.COMPANY_ID
+import com.killua.TestStaticNames.CompanySettings.COMPANY_NAME
 import com.killua.TestStaticNames.User.E_MAIL
 import com.killua.TestStaticNames.User.PASSWORD
 import com.killua.di.FeaturesModule
@@ -13,7 +14,6 @@ import com.killua.features.user.data.UserLds
 import com.killua.features.user.data.dao.UserEntity
 import com.killua.features.user.domain.model.UserDto
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -32,7 +32,7 @@ import org.koin.test.inject
 class CompaniesLDSImplTest() : KoinTest {
 
 
-    private lateinit var userAsynchronously: Deferred<UserEntity>
+    private lateinit var userAsynchronously: UserEntity
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val testDispatcher: CoroutineDispatcher = StandardTestDispatcher()
@@ -73,17 +73,17 @@ class CompaniesLDSImplTest() : KoinTest {
     @Test
     fun addCompany() = runTest {
         //Given
-        val companyName = "lewdness"
+        val companyName = COMPANY_NAME
 
 
-        println("im Here between ${userAsynchronously.isActive}")
+        println("im Here between $userAsynchronously")
 
-        val company: CompanyEntity = userAsynchronously.await().run {
-            return@run dbTransaction(Dispatchers.IO) {
+        val company: CompanyEntity = userAsynchronously.run {
+            return@run dbTransaction(testDispatcher) {
                 return@dbTransaction companiesLDS.addCompanye(
                     CompanyDto(name = companyName), this
                 )
-            }.await().apply {
+            }.apply {
                 println(this.toString())
                 println("im Here")
             }

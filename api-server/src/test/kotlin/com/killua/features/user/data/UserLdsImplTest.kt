@@ -1,20 +1,21 @@
 package com.killua.features.user.data
 
 import com.killua.TestStaticNames.User.E_MAIL
+import com.killua.TestStaticNames.User.ID
 import com.killua.TestStaticNames.User.PASSWORD
 import com.killua.di.FeaturesModule
-import com.killua.extenstions.DatabaseExt
+import com.killua.extenstions.*
 import com.killua.extenstions.DatabaseExt.dbTransaction
-import com.killua.extenstions.UserNotFoundException
-import com.killua.extenstions.checkResult
-import com.killua.extenstions.toUuid
 import com.killua.features.user.data.dao.UserEntity
 import com.killua.features.user.data.dao.UserTable
 import com.killua.features.user.domain.mapper.toUserDto
+import com.killua.features.user.domain.mapper.toUserInfo
 import com.killua.features.user.domain.model.UserDto
+import com.killua.features.user.domain.model.UserInfoDto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -49,10 +50,6 @@ internal class UserLdsImplTest : KoinTest {
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
         println("im at before test")
-
-
-
-
         startKoin {
             modules(FeaturesModule.userModule, FeaturesModule.companyModule)
         }
@@ -61,10 +58,11 @@ internal class UserLdsImplTest : KoinTest {
         runTest(testDispatcher) {
             this.launch {
                 dbTransaction(testDispatcher) {
-                    val x = userLdsImpl.addUserTest(userDto)
-                    val y = userLdsImpl.getUserLoginCredential(email, password)
-                    currentUser = arrayListOf(x, y).checkResult(UserNotFoundException())
-                }.await()
+                    currentUser = listOf(
+                        { runBlocking { userLdsImpl.getUserLoginCredential(email, password) } },
+                        { userLdsImpl.addUserTest(userDto) }
+                    ).checkResult(UserNotFoundException())
+                }
             }.join()
         }
     }
@@ -80,7 +78,7 @@ internal class UserLdsImplTest : KoinTest {
                 UserEntity.find { UserTable.email like "%@testing.com" }.forEach {
                     it.delete()
                 }
-            }.await()
+            }
         }
         stopKoin()
 
@@ -102,7 +100,7 @@ internal class UserLdsImplTest : KoinTest {
                 usersList.forEach {
                     userLdsImpl.addUser(it, currentUser)
                 }
-            }.await()
+            }
             var dbUser = emptyList<UserDto>()
             // When
             dbTransaction(testDispatcher) {
@@ -110,7 +108,7 @@ internal class UserLdsImplTest : KoinTest {
                     .filter { it.email.contains("testing.com") }
                     .map { it.toUserDto() }
                 println("im at the test")
-            }.await()
+            }
             println("usersList ${usersList.count()}")
             println("usersListDb ${dbUser.count()}")
             //Then
@@ -149,18 +147,18 @@ internal class UserLdsImplTest : KoinTest {
             dbTransaction(testDispatcher) {
                 userLdsImpl.addUser(newUser, currentUser).checkResult(UserNotFoundException()).toUserDto()
             }.also {
-                createdUser = it.await()
-            }.await()
+                createdUser = it
+            }
             println("User id= ${createdUser.id}")
             newUser = dbTransaction(testDispatcher) {
                 userLdsImpl.getUser(createdUser.id?.toUuid()!!).checkResult(UserNotFoundException()).toUserDto()
-            }.await()
+            }
 
             //Then
             newUser `should equal` createdUser
             dbTransaction(testDispatcher) {
                 UserEntity.findById(id = createdUser.id?.toUuid()!!)?.delete()
-            }.join()
+            }
         }.also { println(it) }
     }
 
@@ -170,7 +168,31 @@ internal class UserLdsImplTest : KoinTest {
     }
 
     @Test
-    fun addUserInfo() {
+    fun addUserInfo() = runTest {
+        //Given
+        val userInfoDto = UserInfoDto(
+            firstname = "george",
+            lastname = "kassih",
+            phoneNumber = "09786343",
+            nationality = "syrien",
+            sex = "male",
+            street = "hjkj",
+            streetNr = "fhjb",
+            city = "vjhbjkn",
+            areaCode = "hjbvjh",
+            additionalInfo = "",
+        )
+        //When
+        dbTransaction(testDispatcher) {
+            userLdsImpl.addUserInfo(currentUser.id.value, userInfoDto, currentUser).checkResult(UserInfoExption())
+        }
+        val userInfo = dbTransaction(testDispatcher) {
+            userLdsImpl.getUser(currentUser.id.value).checkResult(UserNotFoundException()).userInfo?.toUserInfo()
+        }
+        //then
+        "${userInfoDto.firstname} ${userInfoDto.lastname} ${userInfoDto.phoneNumber}" `should equal` "${userInfo?.firstname} ${userInfo?.lastname} ${userInfo?.phoneNumber}"
+
+
     }
 
     @Test

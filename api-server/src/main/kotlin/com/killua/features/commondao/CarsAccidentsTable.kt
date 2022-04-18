@@ -1,4 +1,4 @@
-package com.killua.features.vehiclemanager.commondao
+package com.killua.features.commondao
 
 import com.killua.features.vehiclemanager.accident.data.dao.AccidentTable
 import com.killua.features.vehiclemanager.car.data.dao.CarTable
