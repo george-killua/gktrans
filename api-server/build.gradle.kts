@@ -69,16 +69,11 @@ dependencies {
 tasks {
     withType<KotlinCompile> {
         kotlinOptions {
-            freeCompilerArgs += listOf("-Xskip-prerelease-check")
+            freeCompilerArgs += listOf("-Xskip-prerelease-check","-opt-in=io.ktor.util.KtorExperimentalAPI")
         }
     }
 }
-tasks {
 
-    withType<KotlinCompile>().all {
-        kotlinOptions.freeCompilerArgs += "-opt-in=io.ktor.util.KtorExperimentalAPI"
-    }
-}
 tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
     manifest {
         attributes(

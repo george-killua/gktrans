@@ -4,7 +4,7 @@ package com.killua.features.company.data
 import com.killua.TestStaticNames.CompanySettings.COMPANY_ID
 import com.killua.TestStaticNames.CompanySettings.COMPANY_NAME
 import com.killua.TestStaticNames.User.E_MAIL
-import com.killua.TestStaticNames.User.PASSWORD
+import com.killua.TestStaticNames.User.TEST_PASSWORD
 import com.killua.di.FeaturesModule
 import com.killua.extenstions.*
 import com.killua.extenstions.DatabaseExt.dbTransaction
@@ -48,13 +48,13 @@ class CompaniesLDSImplTest() : KoinTest {
         runTest {
              userAsynchronously = dbTransaction(Dispatchers.Unconfined) {
                 val email = E_MAIL
-                val password = PASSWORD
+                val password = TEST_PASSWORD
                 return@dbTransaction when (val x = userLDS.getUserLoginCredential(email, password)) {
                     is DbResult.FoundThings -> x.result
                     is DbResult.NothingsFound -> userLDS.addUserTest(UserDto(email = email, password = password))
                         .checkResult(UserNotFoundException())
                 }
-            }
+            }.checkNullability().checkResult(UserNotFoundException())
 
         }
     }
@@ -86,7 +86,7 @@ class CompaniesLDSImplTest() : KoinTest {
             }.apply {
                 println(this.toString())
                 println("im Here")
-            }
+            }!!
         }
         // Then
         companyName `should equal` company.name

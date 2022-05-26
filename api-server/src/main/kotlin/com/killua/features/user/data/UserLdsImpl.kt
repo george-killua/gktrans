@@ -9,6 +9,7 @@ import com.killua.features.user.data.dao.UserTable
 import com.killua.features.user.domain.model.UserDto
 import com.killua.features.user.domain.model.UserInfoDto
 import com.killua.features.user.domain.model.UserType
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.or
 import java.util.*
 
@@ -46,7 +47,7 @@ class UserLdsImpl(private val companyLds: CompaniesLDS) : UserLds {
 
     override suspend fun getUserLoginCredential(email: String, password: String): DbResult<UserEntity> {
         val encodidPassword: String = password.encoded()!!
-        return UserEntity.find { UserTable.email eq email or (UserTable.password eq encodidPassword) }
+        return UserEntity.find { UserTable.email eq email and (UserTable.password eq encodidPassword) }
             .firstOrNull()
             .checkNullability()
     }
@@ -131,22 +132,23 @@ class UserLdsImpl(private val companyLds: CompaniesLDS) : UserLds {
         user: UserInfoDto,
         currentUser: UserEntity
     ): DbResult<UserInfoEntity> {
-
-        val info = getUser(userId).checkResult(UserNotFoundException()).userInfo
-        info?.apply {
-            firstname = user.firstname
-            lastname = user.lastname
-            phoneNumber = user.phoneNumber
-            nationality = user.nationality
-            sex = user.sex
-            street = user.street
-            streetNr = user.streetNr
-            city = user.city
-            areaCode = user.areaCode
-            additionalInfo = user.additionalInfo
+        val updatedUser = getUser(userId).checkResult(UserNotFoundException())
+        val info = updatedUser.userInfo?.run {
+            user.firstname?.let { firstname = it }
+            println(firstname)
+            user.lastname?.let { lastname = it }
+            user.phoneNumber?.let { phoneNumber = it }
+            user.nationality?.let { nationality = it }
+            user.sex?.let { sex = it }
+            user.street?.let { street = it }
+            user.streetNr?.let { streetNr = it }
+            user.city?.let { city = it }
+            user.areaCode?.let { areaCode = it }
+            user.additionalInfo?.let { additionalInfo = it }
             update(currentUser)
-        }
-        return info.checkNullability()
+            return@run this
+        }.checkNullability()
+        return info
     }
 
 

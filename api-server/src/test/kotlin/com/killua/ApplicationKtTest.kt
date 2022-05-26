@@ -12,7 +12,7 @@ internal class ApplicationKtTest {
 
     @Test
     fun testGetSpecificDog() {
-        val test = testApplication  {
+        val test = testApplication {
 
         }
 

@@ -15,8 +15,6 @@ import io.ktor.server.routing.get
 fun Application.configureRouting() {
 
 
-
-
     routing {
         route("/api") {
 

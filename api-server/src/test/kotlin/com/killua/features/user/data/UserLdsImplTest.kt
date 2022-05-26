@@ -1,17 +1,18 @@
 package com.killua.features.user.data
 
 import com.killua.TestStaticNames.User.E_MAIL
-import com.killua.TestStaticNames.User.ID
-import com.killua.TestStaticNames.User.PASSWORD
+import com.killua.TestStaticNames.User.TEST_PASSWORD
 import com.killua.di.FeaturesModule
 import com.killua.extenstions.*
 import com.killua.extenstions.DatabaseExt.dbTransaction
 import com.killua.features.user.data.dao.UserEntity
+import com.killua.features.user.data.dao.UserInfoEntity
 import com.killua.features.user.data.dao.UserTable
 import com.killua.features.user.domain.mapper.toUserDto
 import com.killua.features.user.domain.mapper.toUserInfo
 import com.killua.features.user.domain.model.UserDto
 import com.killua.features.user.domain.model.UserInfoDto
+import com.killua.features.user.domain.model.UserType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -42,7 +43,7 @@ internal class UserLdsImplTest : KoinTest {
     //currentUserSetup
     private val email = E_MAIL
     private val emailTesting = "gepgrpege@testing.com"
-    private val password = PASSWORD
+    private val password = TEST_PASSWORD
     private var userDto = UserDto(email = email, password = password)
     private lateinit var currentUser: UserEntity
 
@@ -78,12 +79,17 @@ internal class UserLdsImplTest : KoinTest {
                 UserEntity.find { UserTable.email like "%@testing.com" }.forEach {
                     it.delete()
                 }
-            }
-        }
-        stopKoin()
 
-        DatabaseExt.disconnect()
-        Dispatchers.resetMain()
+                userLdsImpl.updateUserEmail(currentUser.id.value, E_MAIL, currentUser).checkResult()
+                userLdsImpl.updateUserPassword(currentUser.id.value, TEST_PASSWORD, currentUser).checkResult()
+                userLdsImpl.updateUserType(currentUser.id.value, UserType.GEORGE, currentUser).checkResult()
+
+            }
+            stopKoin()
+
+            DatabaseExt.disconnect()
+            Dispatchers.resetMain()
+        }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class, ExperimentalTime::class)
@@ -95,15 +101,15 @@ internal class UserLdsImplTest : KoinTest {
             (0..4).forEach { i ->
                 usersList.add(UserDto(email = "$i$emailTesting", password = password))
             }
+            var dbUser = emptyList<UserDto>()
             dbTransaction(testDispatcher) {
                 userDto = currentUser.toUserDto()
                 usersList.forEach {
                     userLdsImpl.addUser(it, currentUser)
                 }
-            }
-            var dbUser = emptyList<UserDto>()
-            // When
-            dbTransaction(testDispatcher) {
+
+                // When
+
                 dbUser = userLdsImpl.getAllUsers().checkResult(UserNotFoundException())
                     .filter { it.email.contains("testing.com") }
                     .map { it.toUserDto() }
@@ -142,23 +148,19 @@ internal class UserLdsImplTest : KoinTest {
         measureTime {
             //Given
             var newUser = UserDto(email = emailTesting, password = password)
-            val createdUser: UserDto
+            var createdUser: UserDto? = null
             //When
             dbTransaction(testDispatcher) {
-                userLdsImpl.addUser(newUser, currentUser).checkResult(UserNotFoundException()).toUserDto()
-            }.also {
-                createdUser = it
-            }
-            println("User id= ${createdUser.id}")
-            newUser = dbTransaction(testDispatcher) {
-                userLdsImpl.getUser(createdUser.id?.toUuid()!!).checkResult(UserNotFoundException()).toUserDto()
+                createdUser = userLdsImpl.addUser(newUser, currentUser).checkResult(UserNotFoundException()).toUserDto()
+
+                println("User id= ${createdUser!!.id}")
+                newUser =
+                    userLdsImpl.getUser(createdUser!!.id?.toUuid()!!).checkResult(UserNotFoundException()).toUserDto()
             }
 
             //Then
-            newUser `should equal` createdUser
-            dbTransaction(testDispatcher) {
-                UserEntity.findById(id = createdUser.id?.toUuid()!!)?.delete()
-            }
+
+            newUser `should equal` createdUser!!
         }.also { println(it) }
     }
 
@@ -182,41 +184,139 @@ internal class UserLdsImplTest : KoinTest {
             areaCode = "hjbvjh",
             additionalInfo = "",
         )
+        var userInfo: UserInfoDto? = null
         //When
         dbTransaction(testDispatcher) {
             userLdsImpl.addUserInfo(currentUser.id.value, userInfoDto, currentUser).checkResult(UserInfoExption())
-        }
-        val userInfo = dbTransaction(testDispatcher) {
-            userLdsImpl.getUser(currentUser.id.value).checkResult(UserNotFoundException()).userInfo?.toUserInfo()
+
+            userInfo =
+                userLdsImpl.getUser(currentUser.id.value).checkResult(UserNotFoundException()).userInfo?.toUserInfo()
         }
         //then
-        "${userInfoDto.firstname} ${userInfoDto.lastname} ${userInfoDto.phoneNumber}" `should equal` "${userInfo?.firstname} ${userInfo?.lastname} ${userInfo?.phoneNumber}"
-
+        val a = "${userInfoDto.firstname} ${userInfoDto.lastname} ${userInfoDto.phoneNumber}"
+        val b = "${userInfo?.firstname} ${userInfo?.lastname} ${userInfo?.phoneNumber}"
+        println(a)
+        println(b)
+        a `should equal` b
 
     }
 
     @Test
-    fun updateUserEmail() {
+    fun updateUserEmail() = runTest {
+        //Given
+        val newEmail = E_MAIL + "ge"
+
+        //when
+        val newUserEmail = dbTransaction(testDispatcher) {
+            userLdsImpl.updateUserEmail(currentUser.id.value, newEmail, currentUser).checkResult()
+        }?.email
+
+        val emailNewer = dbTransaction(testDispatcher) {
+            userLdsImpl.getUser(currentUser.id.value).checkResult()
+        }?.email
+        //then
+        emailNewer!! `should equal` newUserEmail!!
+
     }
 
     @Test
-    fun updateUserPassword() {
+    fun updateUserPassword() = runTest {
+        //Given
+        val newPassword = TEST_PASSWORD + "ge"
+
+        //when
+        val newUserPassword = dbTransaction(testDispatcher) {
+            userLdsImpl.updateUserPassword(currentUser.id.value, newPassword, currentUser).checkResult()
+            userLdsImpl.getUser(currentUser.id.value).checkResult()
+        }?.password
+
+        //then
+        newPassword.encoded()!! `should equal` newUserPassword!!
+
     }
 
     @Test
-    fun updateUserType() {
+    fun updateUserType() = runTest {
+        //Given
+        val newType = UserType.values().random()
+
+        //when
+        val newUserType = dbTransaction(testDispatcher) {
+            userLdsImpl.updateUserType(currentUser.id.value, newType, currentUser).checkResult()
+            userLdsImpl.getUser(currentUser.id.value).checkResult()
+        }?.userType
+        //then
+        newType `should equal` newUserType!!
+
     }
 
     @Test
-    fun updateUserInfo() {
+    fun ownTester() = runTest {
+        dbTransaction(testDispatcher) {
+            val user = UserInfoDto(
+                firstname = "gen",
+                lastname = "kbbbh",
+                phoneNumber = "09786343",
+                nationality = "syrien"
+            )
+            UserInfoEntity.findById("52245a9d-4528-4825-ad7e-31317a8a31c3".toUuid())?.run {
+                firstname = user.firstname
+                println(firstname)
+                lastname = lastname checkUpdatable user.lastname
+                phoneNumber = phoneNumber checkUpdatable user.phoneNumber
+                nationality = nationality checkUpdatable user.nationality
+                sex = sex checkUpdatable user.sex
+                street = street checkUpdatable user.street
+                streetNr = streetNr checkUpdatable user.streetNr
+                city = city checkUpdatable user.city
+                areaCode = areaCode checkUpdatable user.areaCode
+                additionalInfo = additionalInfo checkUpdatable user.additionalInfo
+                update(currentUser)
+            }
+        }
     }
+
+    @Test
+    fun updateUserInfo() = runTest {
+        //Given
+        val userInfoDto = UserInfoDto(
+            firstname = "geo",
+            lastname = "khhhhhh",
+            phoneNumber = "09786343",
+        )
+        val ge = dbTransaction(testDispatcher) {
+            userLdsImpl.updateUserInfo(currentUser.id.value, userInfoDto, currentUser)
+                .checkResult(UserInfoExption())
+        }
+        println(ge?.firstname)
+        val userInfo: UserInfoDto? = dbTransaction(testDispatcher) {
+
+            userLdsImpl.getUser(currentUser.id.value).checkResult(UserNotFoundException()).userInfo?.toUserInfo()
+        }//then
+        val a = "${userInfo?.firstname} ${userInfo?.lastname} ${userInfo?.phoneNumber}"
+        val b = "${userInfoDto.firstname} ${userInfoDto.lastname} ${userInfoDto.phoneNumber}"
+        println(a)
+        println(b)
+        a `should equal` b
+    }
+
 
     @Test
     fun deleteUser() {
     }
 
     @Test
-    fun deleteUserInfo() {
+    fun deleteUserInfo() = runTest {
+        //Given
+        val userId = currentUser.id.value
+        //When
+
+        dbTransaction(testDispatcher) {
+            userLdsImpl.deleteUserInfo(userId, currentUser)
+            val userInfoEntity = userLdsImpl.getUserInfo(userId).checkResult()
+            //then
+            userInfoEntity.deletedBy?.id?.value?.`should equal`(userId)
+        }
     }
 
     @Test
@@ -224,6 +324,14 @@ internal class UserLdsImplTest : KoinTest {
     }
 
     @Test
-    fun cleanUserInfoTable() {
+    fun cleanUserInfoTable() = runTest {
+        val expected = 1L
+        val result = dbTransaction(testDispatcher) {
+            userLdsImpl.cleanUserInfoTable()
+            UserInfoEntity.all().count()
+        }.checkNullability().checkResult()
+        result.`should equal`(expected)
+
+
     }
 }

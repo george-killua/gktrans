@@ -9,6 +9,6 @@ object TestStaticNames {
     object User {
         const val ID="39947a74-0329-4139-9091-417ae7613f0f"
         const val E_MAIL = "george@kass.com"
-        const val PASSWORD = "For32geRock"
+        const val TEST_PASSWORD = "For32geRock"
     }
 }

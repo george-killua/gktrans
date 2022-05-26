@@ -1,3 +1,3 @@
 rootProject.name = "gktrans"
 
-include("api-server")
+include("api-server","domain")

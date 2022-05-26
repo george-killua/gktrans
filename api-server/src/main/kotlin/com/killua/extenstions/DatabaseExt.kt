@@ -2,15 +2,15 @@ package com.killua.extenstions
 
 import com.killua.config.AppConfig
 import com.killua.config.DatabaseConfig
+import com.killua.features.commondao.CarsAccidentsTable
+import com.killua.features.commondao.UserCarsTable
+import com.killua.features.commondao.UsersAccidentsTable
 import com.killua.features.company.data.dao.CompanyTable
 import com.killua.features.image.data.dao.ImagesTable
 import com.killua.features.user.data.dao.UserTable
 import com.killua.features.vehiclemanager.accident.data.dao.AccidentTable
 import com.killua.features.vehiclemanager.car.data.dao.CarTable
 import com.killua.features.vehiclemanager.car.info.dao.data.CarInsuranceTable
-import com.killua.features.commondao.CarsAccidentsTable
-import com.killua.features.commondao.UserCarsTable
-import com.killua.features.commondao.UsersAccidentsTable
 import com.killua.features.vehiclemanager.usedhistory.data.dao.UsedHistoryTable
 import com.killua.features.work.data.dao.HolidayTable
 import com.killua.features.work.data.dao.WorkDetailTable
@@ -19,7 +19,6 @@ import com.killua.features.work.data.dao.WorkStaticTable
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Deferred
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.experimental.suspendedTransactionAsync
@@ -122,9 +121,18 @@ object DatabaseExt {
     }
 
 
-    suspend fun <T> dbTransaction(dispatcher: CoroutineDispatcher,block: suspend () -> T): T {
-        return suspendedTransactionAsync(dispatcher ) {
-            block()
+    suspend inline fun <reified T> dbTransaction(dispatcher: CoroutineDispatcher, crossinline block: suspend () -> T): T? {
+        return suspendedTransactionAsync(dispatcher) {
+            var resultValue: T? = null
+            try {
+                resultValue = block()
+                commit()
+            } catch (rf: Exception) {
+                println(rf)
+                rollback()
+            }
+            return@suspendedTransactionAsync resultValue
+
         }.await()
     }
 

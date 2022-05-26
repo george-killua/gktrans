@@ -34,7 +34,7 @@ subprojects {
 
     dependencies {
         //koin implementation
-
+        implementation("org.openapitools:openapi-generator-gradle-plugin:6.0.0-beta")
         testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1")
 
     }

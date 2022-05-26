@@ -1,5 +1,3 @@
-@file:OptIn(KtorExperimentalLocationsAPI::class)
-
 package com.killua.features.image.resource
 
 import com.killua.features.image.domain.ImagesRepo
@@ -8,9 +6,11 @@ import com.killua.plugins.AUTHENTICATION_HEADER
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.locations.*
-import io.ktor.server.locations.post
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.routing.delete
+import io.ktor.server.routing.get
+import io.ktor.server.routing.post
 
 @Location("/image")
 class ImageIndex {

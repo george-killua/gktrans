@@ -10,13 +10,13 @@ import io.ktor.util.*
 import org.jetbrains.exposed.sql.exists
 
 fun UserEntity.toUserDto(): UserDto {
-    val urled =if(picture!=null)picture.firstOrNull()?.imageUri else ""
+    val urled = if (picture != null) picture.firstOrNull()?.imageUri else ""
     return UserDto(
         id = id.value.toString(),
         password = password,
         email = email,
         userType = userType,
-        pictureUrl = urled  ,
+        pictureUrl = urled,
         company = company?.toCompanyMentionDto(),
         createdBy = createdBy.id.value.toString(),
         createdDate = createdDate.millis,

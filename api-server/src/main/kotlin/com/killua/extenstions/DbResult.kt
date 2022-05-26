@@ -8,8 +8,8 @@ sealed class DbResult<out T : Any> {
     object NothingsFound : DbResult<Nothing>()
 }
 
-infix fun <T : Any> DbResult<T>.checkResult(
-    exception: Exception?
+fun <T : Any> DbResult<T>.checkResult(
+    exception: Exception? = null
 ): T {
 
     return when {
@@ -25,7 +25,7 @@ infix fun <T : Any> DbResult<T>.checkResult(
 @Throws(Exception::class)
 fun <T : Any> Collection<() -> DbResult<T>>.checkResult(exception: Exception): T =
     run ge@{
-        var result: T? = null
+        var result: T?
         this.forEachIndexed { _, newResult ->
             try {
                 newResult().checkResult(exception).let {
@@ -43,5 +43,14 @@ inline fun <reified T : Any> T?.checkNullability(): DbResult<T> {
     return when (this) {
         null -> DbResult.NothingsFound
         else -> DbResult.FoundThings(this)
+    }
+}
+
+inline infix fun <reified T : Any> T?.checkUpdatable(string: T?): T? {
+    return when {
+        string == null -> null
+        this is String && string is String -> string.ifBlank { this }
+        this == string -> this
+        else -> string
     }
 }

@@ -11,13 +11,24 @@ import org.jetbrains.exposed.sql.jodatime.CurrentDateTime
 import org.jetbrains.exposed.sql.jodatime.datetime
 import org.joda.time.DateTime
 import java.util.*
+import java.util.concurrent.TimeUnit
+
 
 abstract class CommonTable(name: String) : UUIDTable(name) {
-    val createdBy = reference("created_by", UserTable, onDelete = ReferenceOption.NO_ACTION)
+    val createdBy = reference(
+        "created_by", UserTable, onDelete = ReferenceOption.NO_ACTION,
+        onUpdate = ReferenceOption.NO_ACTION
+    )
     val createdDate = datetime("created_date").defaultExpression(CurrentDateTime())
-    val updatedBy = reference("updated_by", UserTable, onDelete = ReferenceOption.NO_ACTION).nullable()
+    val updatedBy = reference(
+        "updated_by", UserTable, onDelete = ReferenceOption.NO_ACTION,
+        onUpdate = ReferenceOption.NO_ACTION
+    ).nullable()
     val updatedDate = datetime("updated_date").nullable()
-    val deletedBy = reference("deleted_by", UserTable, onDelete = ReferenceOption.NO_ACTION).nullable()
+    val deletedBy = reference(
+        "deleted_by", UserTable, onDelete = ReferenceOption.NO_ACTION,
+        onUpdate = ReferenceOption.NO_ACTION
+    ).nullable()
     val deletedDate = datetime("deleted_date").nullable()
 }
 
@@ -35,9 +46,13 @@ abstract class CommonEntity(id: EntityID<UUID>, commonTable: CommonTable) : UUID
 
 
     fun cleanSomeOfIt(): Int {
+
         return deletedDate?.let {
-            if (it.minusDays(15).dayOfMonth > 0)
+            val diffInMillisecond: Long = DateTime.now().millis - it.millis
+            val res = TimeUnit.MILLISECONDS.toDays(diffInMillisecond)
+            if (res > 0) {
                 delete()
+            }
             return@let 1
         } ?: 0
     }

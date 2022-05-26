@@ -6,11 +6,11 @@ import com.killua.features.user.domain.mapper.toUserDto
 import com.killua.features.user.domain.model.UserDto
 import com.killua.inject
 import com.killua.logger.ApiLogger
-import io.ktor.websocket.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
+import io.ktor.server.websocket.*
+import io.ktor.websocket.*
 import kotlinx.coroutines.channels.consumeEach
-import org.koin.ktor.ext.inject
 
 
 fun Route.notesSocket() {

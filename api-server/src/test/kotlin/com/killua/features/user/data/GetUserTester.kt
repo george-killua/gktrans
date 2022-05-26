@@ -32,7 +32,7 @@ class GetUserTester : KoinTest {
 
     //currentUserSetup
     private val email = TestStaticNames.User.E_MAIL
-    private val password = TestStaticNames.User.PASSWORD
+    private val password = TestStaticNames.User.TEST_PASSWORD
     private var userDto = UserDto(email = email, password = password)
     private lateinit var currentUser: UserEntity
 

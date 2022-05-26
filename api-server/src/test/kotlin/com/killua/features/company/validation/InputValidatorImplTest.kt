@@ -10,7 +10,7 @@ import org.koin.core.component.inject
 import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.test.KoinTest
-import kotlin.test.assertEquals
+
 internal class InputValidatorImplTest : KoinTest {
 
     private val inputValidator: InputValidator by inject()
@@ -35,10 +35,10 @@ internal class InputValidatorImplTest : KoinTest {
     @Test
     fun getNewInstanceAfterError() {
         // Given
-        val password = "GEORGE"
+        val testPassword = "GEORGE"
         val errorMessage = "password should contain at least 1 lower case letter"
         // When adding a new task
-        val resultHolder: ValidationResult = inputValidator.isPasswordValid(password).validate()
+        val resultHolder: ValidationResult = inputValidator.isPasswordValid(testPassword).validate()
         // Then the new task event is triggered
         errorMessage `should equal` (resultHolder as ValidationResult.Invalid).errorMessage
         inputValidator.newInstance.validate() shouldBe  ValidationResult.Valid
@@ -47,12 +47,12 @@ internal class InputValidatorImplTest : KoinTest {
     @Test
     fun passwordMustLowerLetter() {
         // Given
-        val password = "GEORGE"
+        val testPassword = "GEORGE"
         val validationResult = ValidationResult.Invalid("password should contain at least 1 lower case letter")
 
 
         // When adding a new task
-        val resultHolder: ValidationResult = inputValidator.isPasswordValid(password).validate()
+        val resultHolder: ValidationResult = inputValidator.isPasswordValid(testPassword).validate()
 
         // Then the new task event is triggered
         validationResult.errorMessage `should equal` (resultHolder as ValidationResult.Invalid).errorMessage
@@ -61,9 +61,9 @@ internal class InputValidatorImplTest : KoinTest {
     @Test
     fun passwordMustUpperLetter() {
         // Given
-        val password = "ge23"
+        val testPassword = "ge23"
         val validationResult = ValidationResult.Invalid("password should contain at least 1 upper case letter")
-        val resultHolder = inputValidator.isPasswordValid(password).validate()
+        val resultHolder = inputValidator.isPasswordValid(testPassword).validate()
 
         // Then the new task event is triggered
         validationResult.errorMessage `should equal` (resultHolder as ValidationResult.Invalid).errorMessage
@@ -72,9 +72,9 @@ internal class InputValidatorImplTest : KoinTest {
     @Test
     fun passwordMustDigit() {
         // Given
-        val password = "geGEro"
+        val testPassword = "geGEro"
         val validationResult = ValidationResult.Invalid("password should contain at least 1 digit")
-        val resultHolder = inputValidator.isPasswordValid(password).validate()
+        val resultHolder = inputValidator.isPasswordValid(testPassword).validate()
 
         // Then the new task event is triggered
         validationResult.errorMessage `should equal` (resultHolder as ValidationResult.Invalid).errorMessage
@@ -83,9 +83,9 @@ internal class InputValidatorImplTest : KoinTest {
     @Test
     fun passwordMustNoWhiteSpaces() {
         // Given
-        val password = "geGE3 4ro"
+        val testPassword = "geGE3 4ro"
         val validationResult = ValidationResult.Invalid("password shouldn't contain white spaces")
-        val resultHolder = inputValidator.isPasswordValid(password).validate()
+        val resultHolder = inputValidator.isPasswordValid(testPassword).validate()
 
         // Then the new task event is triggered
         validationResult.errorMessage `should equal` (resultHolder as ValidationResult.Invalid).errorMessage
@@ -94,20 +94,20 @@ internal class InputValidatorImplTest : KoinTest {
     @Test
     fun passwordMustMore6Length() {
         // Given
-        val password = "gE2o"
+        val testPassword = "gE2o"
         val validationResult = ValidationResult.Invalid("password should contain at least 8 characters")
-        val resultHolder = inputValidator.isPasswordValid(password).validate()
+        val resultHolder = inputValidator.isPasswordValid(testPassword).validate()
 
         // Then the new task event is triggered
         validationResult.errorMessage `should equal` (resultHolder as ValidationResult.Invalid).errorMessage
     }
 
     @Test
-    fun passwordCorrect() {
+    fun testPasswordCorrect() {
         // Given
-        val password = "gEF2vjbso"
+        val testPassword = "gEF2vjbso"
         val validationResult = ValidationResult.Valid
-        val resultHolder = inputValidator.isPasswordValid(password).validate()
+        val resultHolder = inputValidator.isPasswordValid(testPassword).validate()
 
         // Then the new task event is triggered
         validationResult `should equal` (resultHolder as ValidationResult.Valid)
@@ -116,10 +116,10 @@ internal class InputValidatorImplTest : KoinTest {
     @Test
     fun isStringLengthNotValid() {
         // Given
-        val password = "kfdkd"
-        val name = "password"
+        val testPassword = "kfdkd"
+        val name = "testPassword"
         val output = "the $name length is too long"
-        val resultHolder = inputValidator.isStringLengthValid(password, "password", 4).validate()
+        val resultHolder = inputValidator.isStringLengthValid(testPassword, "testPassword", 4).validate()
 
         // Then the new task event is triggered
         output `should equal` (resultHolder as ValidationResult.Invalid).errorMessage
@@ -129,10 +129,10 @@ internal class InputValidatorImplTest : KoinTest {
     @Test
     fun isStringLengthValid() {
         // Given
-        val password = "kfdkd"
-        val name = "password"
+        val testPassword = "kfdkd"
+        val name = "testPassword"
         val output = ValidationResult.Valid
-        val resultHolder = inputValidator.isStringLengthValid(password, name, 8).validate()
+        val resultHolder = inputValidator.isStringLengthValid(testPassword, name, 8).validate()
 
         // Then the new task event is triggered
         output `should equal` resultHolder as ValidationResult.Valid
@@ -168,8 +168,8 @@ internal class InputValidatorImplTest : KoinTest {
     fun inputValidatorHaveTwoErrors() {
 
         // Given
-        val password1 = "gege"
-        val password2 = "GEGE"
+        val testPassword1 = "gege"
+        val testPassword2 = "GEGE"
         val uuid = "deaee7c5-d178d-4de6-9f20-49ee8e830c1d"
         val messageOutput = StringBuilder()
             .append("password should contain at least 1 upper case letter\n")
@@ -178,7 +178,7 @@ internal class InputValidatorImplTest : KoinTest {
 
         val resultHolder: ValidationResult =
             //When
-            inputValidator.isPasswordValid(password1).isPasswordValid(password2)
+            inputValidator.isPasswordValid(testPassword1).isPasswordValid(testPassword2)
                 .isUUIDValid(uuid).validate()
 
         //then

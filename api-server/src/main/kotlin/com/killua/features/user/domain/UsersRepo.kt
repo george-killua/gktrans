@@ -12,7 +12,7 @@ interface UsersRepo {
     suspend fun getUser(userId: String): UserDto?
     suspend fun getUserInfo(userId: String): UserInfoDto?
     suspend fun getUserLoginCredential(email: String, password: String): UserEntity?
-    suspend fun addUser(user: UserDto, currentUser: UserEntity): UserDto
+    suspend fun addUser(user: UserDto, currentUser: UserEntity): UserDto?
     suspend fun addUserInfo(userID: String, userInfo: UserInfoDto, currentUser: UserEntity): UserInfoDto?
     suspend fun updateUserEmail(userId: String, email: String, currentUser: UserEntity): UserDto?
     suspend fun updateUserPassword(userId: String, password: String, currentUser: UserEntity): UserDto?

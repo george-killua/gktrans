@@ -5,7 +5,7 @@ object Versions {
     const val kotlin = "1.6.20"
     const val kotlinxSerialization = "0.20.0"
 
-    const val ktor = "2.0.0"
+    const val ktor = "2.0.1"
     const val logback = "1.2.11"
 
     const val jUnit = "5.6.1"

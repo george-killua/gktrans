@@ -52,8 +52,8 @@ data class DefaultResponse(
 
 interface Payload
 
-private const val ALGO = "AES"
-private val keyValue = "0123456789abcdef".toByteArray()
+const val ALGO = "AES"
+const val keyValue = "0123456789abcdef"
 
 @OptIn(InternalAPI::class)
 fun String.encoded(): String? {
@@ -74,7 +74,7 @@ fun String.encoded(): String? {
 
 
 private fun generateKey(): Key {
-    return SecretKeySpec(keyValue, ALGO)
+    return SecretKeySpec(keyValue.encodeToByteArray(), ALGO)
 }
 
 @OptIn(InternalAPI::class)

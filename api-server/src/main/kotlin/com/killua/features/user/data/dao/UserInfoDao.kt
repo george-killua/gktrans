@@ -29,7 +29,6 @@ class UserInfoEntity(id: EntityID<UUID>) : CommonEntity(id, UserInfosTable) {
     var city by UserInfosTable.city
     var nationality by UserInfosTable.nationality
     var additionalInfo by UserInfosTable.additionalInfo
-
 }
 
 object UserInfosTable : CommonTable(USER_INFO_TABLE) {

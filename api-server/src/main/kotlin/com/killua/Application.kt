@@ -6,16 +6,15 @@ import com.killua.di.applicationModule
 import com.killua.extenstions.DatabaseExt
 import com.killua.plugins.*
 import io.ktor.server.application.*
-import org.koin.core.context.startKoin
+import io.ktor.server.locations.*
 import org.koin.core.module.Module
-import org.koin.java.KoinJavaComponent.inject
-import org.koin.ktor.ext.Koin
 
 
 fun main(args: Array<String>): Unit =
     io.ktor.server.netty.EngineMain.main(args)
 
 
+@OptIn(KtorExperimentalLocationsAPI::class)
 @Suppress("unused") // application.conf references the main function. This annotation prevents the IDE from marking it as unused.
 fun Application.module(
     koinModules: List<Module> = listOf(
@@ -28,6 +27,7 @@ fun Application.module(
 
     ),
 ) {
+    install(Locations)
     install(KoinPlugin) {
         modules(koinModules)
     }

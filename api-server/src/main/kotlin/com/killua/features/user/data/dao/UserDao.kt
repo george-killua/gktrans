@@ -28,6 +28,7 @@ import org.jetbrains.exposed.sql.jodatime.CurrentDateTime
 import org.jetbrains.exposed.sql.jodatime.datetime
 import org.joda.time.DateTime
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class UserEntity(id: EntityID<UUID>) : UUIDEntity(id), Principal {
     companion object : UUIDEntityClass<UserEntity>(UserTable)
@@ -57,7 +58,10 @@ class UserEntity(id: EntityID<UUID>) : UUIDEntity(id), Principal {
 
     fun cleanSomeOfIt(): Int {
         return deletedDate?.let {
-            if (it.minusDays(15).dayOfMonth > 0)
+            val diffInMillisecond: Long = DateTime.now().millis - it.millis
+            val res = TimeUnit.MILLISECONDS.toDays(diffInMillisecond)
+            println("${id.value} $res")
+            if (res > 0)
                 delete()
             return@let 1
         } ?: 0
@@ -92,15 +96,32 @@ class UserEntity(id: EntityID<UUID>) : UUIDEntity(id), Principal {
 
 
 object UserTable : UUIDTable(USER_TABLE) {
-    val userInfo = reference(USER_INFO_COLUMN, UserInfosTable, onDelete = ReferenceOption.SET_NULL).nullable()
-    val userType = enumerationByName(USER_TYPE_COLUMN, 8, UserType::class)
-    val password = text(PASSWORD_COLUMN).default("")
     val email = text(EMAIL_ADDRESS_COLUMN).default("")
-    val company = reference(COMPANY_COLUMN, CompanyTable, onDelete = ReferenceOption.CASCADE).nullable()
-    val createdBy = reference(CREATED_BY_COLUMN, UserTable, onDelete = ReferenceOption.SET_NULL)
+    val password = text(PASSWORD_COLUMN).default("")
+    val userInfo = reference(
+        USER_INFO_COLUMN,
+        UserInfosTable,
+        onDelete = ReferenceOption.SET_NULL,
+        onUpdate = ReferenceOption.RESTRICT
+    ).nullable()
+    val company = reference(
+        COMPANY_COLUMN, CompanyTable, onDelete = ReferenceOption.CASCADE,
+        onUpdate = ReferenceOption.NO_ACTION
+    ).nullable()
+    val userType = enumerationByName(USER_TYPE_COLUMN, 8, UserType::class)
+    val createdBy = reference(
+        CREATED_BY_COLUMN, UserTable, onDelete = ReferenceOption.SET_NULL,
+        onUpdate = ReferenceOption.NO_ACTION
+    )
     val createdDate = datetime(CREATED_DATE_COLUMN).defaultExpression(CurrentDateTime())
-    val updatedBy = reference(UPDATED_BY_COLUMN, UserTable, onDelete = ReferenceOption.SET_NULL).nullable()
+    val updatedBy = reference(
+        UPDATED_BY_COLUMN, UserTable, onDelete = ReferenceOption.SET_NULL,
+        onUpdate = ReferenceOption.NO_ACTION
+    ).nullable()
     val updatedDate = datetime(UPDATED_DATE_COLUMN).nullable()
-    val deletedBy = reference(DELETED_BY_COLUMN, UserTable, onDelete = ReferenceOption.SET_NULL).nullable()
+    val deletedBy = reference(
+        DELETED_BY_COLUMN, UserTable, onDelete = ReferenceOption.SET_NULL,
+        onUpdate = ReferenceOption.NO_ACTION
+    ).nullable()
     val deletedDate = datetime(DELETED_DATE_COLUMN).nullable()
 }
